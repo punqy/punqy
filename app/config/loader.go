@@ -23,8 +23,8 @@ func Load() Config {
 		envPath = fmt.Sprintf(".env.local")
 		logger.Warnf("Loading conf %s", envPath)
 		if err := godotenv.Load(envPath); err != nil {
+			logger.Warnf("File not found %s", envPath)
 		}
-		logger.Warnf("File not found %s", envPath)
 	}
 	if err := envconfig.Process(context.Background(), &cfg); err != nil {
 		log.Fatal(err)

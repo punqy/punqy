@@ -7,5 +7,6 @@ import (
 
 func Api(handlers httphandler.ModuleHttpHandlers) punqy.RouteList {
 	return punqy.RouteList{
+		punqy.Route{Path: "/oauth", Inner: handlers.OAuthTokenHandler().Routes()},
 	}
 }
