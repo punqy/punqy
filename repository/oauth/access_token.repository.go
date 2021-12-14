@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"context"
+	"github.com/google/uuid"
 	punqy "github.com/punqy/core"
 	model "github.com/punqy/punqy/model/storage"
 	"github.com/punqy/punqy/repository/tables"
@@ -13,7 +14,6 @@ type AccessTokenRepository interface {
 	Insert(ctx context.Context, entity *model.AccessToken) error
 	Create(ctx context.Context, entity punqy.OAuthAccessTokenValues) error
 	FindOneByToken(ctx context.Context, token string) (punqy.OAuthAccessToken, error)
-
 }
 
 type accessTokenRepository struct {
@@ -33,30 +33,34 @@ func NewAccessTokenRepository(db punqy.Dal) AccessTokenRepository {
 	return &accessTokenRepository{db}
 }
 
-//func (r *accessTokenRepository) NewAccessToken(ctx context.Context, userId *uuid.UUID, clientId uuid.UUID, tll int) (model.AccessToken, error) {
-//	e := model.AccessToken{
-//		Token:     util.RandomString(64),
-//		UserId:    userId,
-//		ClientId:  clientId,
-//		ExpiresAt: time.Now().Add(time.Duration(tll) * time.Minute),
-//	}
-//
-//	if err := e.NewId(); err != nil {
-//		return model.AccessToken{}, err
-//	}
-//	if err := r.Insert(ctx, &e); err != nil {
-//		return model.AccessToken{}, err
-//	}
-//
-//	return e, nil
-//}
-
 func (r *accessTokenRepository) FindOneByToken(ctx context.Context, token string) (punqy.OAuthAccessToken, error) {
 	return r.FindOneBy(ctx, qbuilder.Conditions{"token": token})
 }
 
-func (r *accessTokenRepository) Create(ctx context.Context, entity punqy.OAuthAccessTokenValues) error {
-	panic("implement me")
+func (r *accessTokenRepository) Create(ctx context.Context, values punqy.OAuthAccessTokenValues) error {
+	var userID *uuid.UUID
+	if values.UserId != nil {
+		uid, err := uuid.Parse(*values.UserId)
+		if err != nil {
+			return err
+		}
+		userID = &uid
+	}
+	cid, err := uuid.Parse(values.ClientId)
+	if err != nil {
+		return err
+	}
+
+	e := model.AccessToken{
+		Token:     values.Token,
+		UserId:    userID,
+		ClientId:  cid,
+		ExpiresAt: values.ExpiresAt,
+	}
+	if err := e.NewId(); err != nil {
+		return err
+	}
+	return r.Insert(ctx, &e)
 }
 
 func (r *accessTokenRepository) Insert(ctx context.Context, entity *model.AccessToken) error {

@@ -4,7 +4,7 @@ import (
 	punqy "github.com/punqy/core"
 )
 
-func SecurityConfig(module security.ModuleSecurity) punqy.SecurityConfig {
+func SecurityConfig(authenticator punqy.OAuthAuthenticator) punqy.SecurityConfig {
 	return punqy.SecurityConfig{
 		Firewall: punqy.FirewallConfig{
 			punqy.Area{
@@ -18,7 +18,7 @@ func SecurityConfig(module security.ModuleSecurity) punqy.SecurityConfig {
 			punqy.Area{
 				Secure:        true,
 				Pattern:       "^/api/",
-				Authenticator: module.OAuthAuthenticator(),
+				Authenticator: authenticator,
 			},
 		},
 	}

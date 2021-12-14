@@ -3,49 +3,56 @@ package oauth
 import (
 	"context"
 	"github.com/google/uuid"
+	punqy "github.com/punqy/core"
+	model "github.com/punqy/punqy/model/storage"
+	"github.com/punqy/punqy/repository/tables"
 	"github.com/slmder/qbuilder"
-	model "github.com/picknpark/wshub/model/storage"
-	"github.com/picknpark/wshub/pkg/storage"
-	"github.com/picknpark/wshub/pkg/util"
-	"github.com/picknpark/wshub/repository/schema/tables"
-	"time"
 )
 
 type RefreshTokenRepository interface {
-	NewRefreshToken(ctx context.Context, userId *uuid.UUID, clientId uuid.UUID, tll int) (model.RefreshToken, error)
-	Find(ctx context.Context, id uint32) (model.RefreshToken, error)
-	FindOneByToken(ctx context.Context, token string) (model.RefreshToken, error)
+	Find(ctx context.Context, id uint32) (*model.RefreshToken, error)
+	FindOneByToken(ctx context.Context, token string) (punqy.OAuthRefreshToken, error)
 	Insert(ctx context.Context, entity *model.RefreshToken) error
-	Update(ctx context.Context, entity model.RefreshToken) error
+	Update(ctx context.Context, entity punqy.OAuthRefreshToken) error
+	Create(ctx context.Context, entity punqy.OAuthRefreshTokenValues) error
 }
 
 type refreshTokenRepository struct {
-	storage.Dal
+	punqy.Dal
 }
 
-func NewRefreshTokenRepository(db storage.Dal) RefreshTokenRepository {
+func NewRefreshTokenRepository(db punqy.Dal) RefreshTokenRepository {
 	return &refreshTokenRepository{db}
 }
 
-func (r *refreshTokenRepository) NewRefreshToken(ctx context.Context, userId *uuid.UUID, clientId uuid.UUID, tll int) (model.RefreshToken, error) {
-	e := model.RefreshToken{
-		Token:     util.RandomString(64),
-		UserId:    userId,
-		ClientId:  clientId,
-		ExpiresAt: time.Now().Add(time.Duration(tll) * time.Minute),
-	}
-	if err := e.NewId(); err != nil {
-		return e, err
-	}
-
-	if err := r.Insert(ctx, &e); err != nil {
-		return model.RefreshToken{}, err
-	}
-	return e, nil
+func (r *refreshTokenRepository) FindOneByToken(ctx context.Context, token string) (punqy.OAuthRefreshToken, error) {
+	return r.FindOneBy(ctx, qbuilder.Conditions{"token": token})
 }
 
-func (r *refreshTokenRepository) FindOneByToken(ctx context.Context, token string) (model.RefreshToken, error) {
-	return r.FindOneBy(ctx, qbuilder.Conditions{"token": token})
+func (r *refreshTokenRepository) Create(ctx context.Context, values punqy.OAuthRefreshTokenValues) error {
+	var userID *uuid.UUID
+	if values.UserId != nil {
+		uid, err := uuid.Parse(*values.UserId)
+		if err != nil {
+			return err
+		}
+		userID = &uid
+	}
+	cid, err := uuid.Parse(values.ClientId)
+	if err != nil {
+		return err
+	}
+
+	e := model.RefreshToken{
+		Token:     values.Token,
+		UserId:    userID,
+		ClientId:  cid,
+		ExpiresAt: values.ExpiresAt,
+	}
+	if err := e.NewId(); err != nil {
+		return err
+	}
+	return r.Insert(ctx, &e)
 }
 
 func (r *refreshTokenRepository) Insert(ctx context.Context, entity *model.RefreshToken) error {
@@ -58,9 +65,9 @@ func (r *refreshTokenRepository) Insert(ctx context.Context, entity *model.Refre
 	return r.PipeErr(err)
 }
 
-func (r *refreshTokenRepository) Update(ctx context.Context, entity model.RefreshToken) error {
+func (r *refreshTokenRepository) Update(ctx context.Context, entity punqy.OAuthRefreshToken) error {
 	query := r.BuildUpdate(tables.OAuthRefreshToken).
-		SetMap(storage.StringMap{
+		SetMap(punqy.StringMap{
 			"user_id":    ":user_id",
 			"client_id":  ":client_id",
 			"expires_at": ":expires_at",
@@ -73,16 +80,16 @@ func (r *refreshTokenRepository) Update(ctx context.Context, entity model.Refres
 	return r.PipeErr(err)
 }
 
-func (r *refreshTokenRepository) FindBy(ctx context.Context, cond qbuilder.Conditions, pager storage.Pagination) ([]model.RefreshToken, error) {
+func (r *refreshTokenRepository) FindBy(ctx context.Context, cond qbuilder.Conditions, pager punqy.Pagination) ([]model.RefreshToken, error) {
 	var entities []model.RefreshToken
 	return entities, r.Dal.FindBy(ctx, tables.OAuthRefreshToken, &entities, cond, pager)
 }
 
-func (r *refreshTokenRepository) FindOneBy(ctx context.Context, cond qbuilder.Conditions) (model.RefreshToken, error) {
-	entity := model.RefreshToken{}
-	return entity, r.Dal.FindOneBy(ctx, tables.OAuthRefreshToken, &entity, cond)
+func (r *refreshTokenRepository) FindOneBy(ctx context.Context, cond qbuilder.Conditions) (*model.RefreshToken, error) {
+	entity := &model.RefreshToken{}
+	return entity, r.Dal.FindOneBy(ctx, tables.OAuthRefreshToken, entity, cond)
 }
 
-func (r *refreshTokenRepository) Find(ctx context.Context, id uint32) (model.RefreshToken, error) {
+func (r *refreshTokenRepository) Find(ctx context.Context, id uint32) (*model.RefreshToken, error) {
 	return r.FindOneBy(ctx, qbuilder.Conditions{"id": id})
 }
