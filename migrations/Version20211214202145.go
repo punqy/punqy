@@ -17,7 +17,6 @@ func (v Version20211214202145) Up(tx *sqlx.Tx) error {
 		    id       	UUID      NOT NULL,
 		    roles      	JSONB,
 		    username   	VARCHAR(255) NOT NULL,
-		    first_name  VARCHAR(255),
 		    password   	VARCHAR(255),
 		    updated_at 	TIMESTAMP,
 		    deleted_at  TIMESTAMP,
