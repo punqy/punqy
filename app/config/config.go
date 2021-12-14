@@ -16,4 +16,6 @@ type Config struct {
 	DatabaseDSN          string `env:"DATABASE_DSN"`
 	OauthAccessTokenTTL  int    `env:"OAUTH_ACCESS_TOKEN_TTL,default=15"`
 	OauthRefreshTokenTTL int    `env:"OAUTH_REFRESH_TOKEN_TTL,default=2880"`
+	MigrationsDir        string `env:"MIGRATIONS_DIR,default=migrations"`
+	MigrationsTableName  string `env:"MIGRATIONS_TABLE_NAME,default=migration_versions"`
 }
