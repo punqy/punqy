@@ -1,0 +1,25 @@
+{{if . }}
+    <p class="p-0">User</p>
+    <table class="table table-sm table-bordered">
+        <tr>
+            <td class="">Username</td>
+            <td><code>{{.Username}}</code></td>
+        </tr>
+        <tr>
+            <td class="">ID</td>
+            <td><code>{{ .ID}}</code></td>
+        </tr>
+        <tr>
+            <td class="">Roles</td>
+            <td><code>{{ .Roles}}</code></td>
+        </tr>
+        <tr>
+            <td class="">Created at</td>
+            <td><code>{{ .CreatedAt}}</code></td>
+        </tr>
+        <tr>
+            <td class="">Deleted at</td>
+            <td><code>{{ .DeletedAt }}</code></td>
+        </tr>
+    </table>
+{{end}}

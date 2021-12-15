@@ -1,0 +1,24 @@
+{% extend dev/profiler/main.gohtml %}
+{% block header %}Debug charts{% end %}
+{% block header-toolbar %}<code></code>{% end %}
+{% block css %}
+<style>
+    iframe {
+        width: 100%;
+        position: fixed;
+        height: 100%;
+        -ms-zoom: 0.8;
+        -moz-transform: scale(0.8);
+        -moz-transform-origin: 0 0;
+        -o-transform: scale(0.8);
+        -o-transform-origin: 0 0;
+        -webkit-transform: scale(0.8);
+        -webkit-transform-origin: 0 0;
+    }
+</style>
+{% end %}
+{% block body %}
+<div class="row">
+    <iframe src="/debug/pprof/" frameborder="0"></iframe>
+</div>
+{% end %}

@@ -1,0 +1,49 @@
+{% extend dev/profiler/main.gohtml %}
+{% block header %}Profile list{% end %}
+{% block header-toolbar %}{% end %}
+{% block body %}
+<table class="table table-hover table-bordered" style="font-size: small">
+    <thead class="text-center">
+    <tr style="font-size: small">
+        <th>#</th>
+        <th>Id</th>
+        <th>Time</th>
+        <th>URI</th>
+        <th>Method</th>
+        <th>Response code</th>
+        <th>Ip</th>
+        <th>Request duration</th>
+        <th>Memory used</th>
+        <th>Sql queries</th>
+        <th>Query time</th>
+    </tr>
+    </thead>
+    {{$pagination := .pagination}}
+    {{range $i, $item := $pagination.Items}}
+        {{ $color :="success" }}
+        {{if gt  .ResponseCode 399 }}
+            {{ $color = "warning"}}
+        {{end}}
+        {{if gt  .ResponseCode 499 }}
+            {{ $color = "danger"}}
+        {{end}}
+        <tr class="">
+            <td class="text-center">{{ minus (plus (inc $i) (mul $pagination.Page $pagination.Limit)) $pagination.Limit }}</td>
+            <td class="text-center"><a style="text-decoration: none" href="/dev/profiler/show/{{.Id}}">{{$item.Id}}</a>
+            </td>
+            <td class="text-center">{{format $item.DateTime "2006-01-02 15:04:05"}}</td>
+            <td><code>{{$item.RequestURI}}</code></td>
+            <td class="text-danger font-monospace text-center">{{$item.RequestMethod}}</td>
+            <td class="text-center"><span style="font-size: 12px"
+                                          class="badge bg-{{$color}}">{{$item.ResponseCode}}</span></td>
+            <td class="text-center">{{$item.RemoteAddr}}</td>
+            <td class="text-center">{{$item.RequestDuration}}.s</td>
+            <td class="text-center">{{$item.MemoryUsed}} kib</td>
+            <td colspan="1" class="text-center"><span class="badge bg-light text-dark">{{len $item.SqlQueries}}</span>
+            </td>
+            <td class="text-center">{{ $item.TotalQExecTimeString}}</td>
+        </tr>
+    {{end}}
+</table>
+{{include "common/dev/pagination.gohtml" .pagination}}
+{% end %}

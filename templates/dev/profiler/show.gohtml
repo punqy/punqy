@@ -1,0 +1,129 @@
+{% extend dev/profiler/main.gohtml %}
+{% block header %}Profile {% end %}
+{% block header-toolbar %} <div class="text-danger">{{ .Id}}</div>{% end %}
+{% block css %}
+<style>
+    .bordered {
+        border-left: 2px dashed #dee2e6;
+        padding-left: 10px !important;
+    }
+</style>
+{% end %}
+{% block body %}
+
+{{ $color :="success" }}
+{{if gt  .ResponseCode 399 }}
+    {{ $color = "warning"}}
+{{end}}
+{{if gt  .ResponseCode 499 }}
+    {{ $color = "danger"}}
+{{end}}
+<div class="row p-3 align-items-start">
+    <p class="p-0">Request</p>
+
+    <table class="table table-sm table-bordered">
+        <tr>
+            <td class="text-danger font-monospace">Id</td>
+            <td>{{.Id}}</td>
+            <td class="text-danger font-monospace">Method</td>
+            <td>{{ .RequestMethod}}</td>
+            <td class="text-danger font-monospace">Uri</td>
+            <td><code>{{ .RequestURI}}</code></td>
+        </tr>
+        <tr>
+            <td class="text-danger font-monospace">Response code</td>
+            <td><span style="font-size: 12px" class="badge bg-{{$color}}">{{ .ResponseCode}}</span></td>
+            <td class="text-danger font-monospace">Date</td>
+            <td>{{format .DateTime "2006-01-02 15:04:05"}}</td>
+            <td class="text-danger font-monospace">IP</td>
+            <td><code>{{ .RemoteAddr}}</code></td>
+        </tr>
+        <tr>
+            <td class="text-danger font-monospace">Request duration</td>
+            <td>{{ .RequestDuration}} sec</td>
+            <td class="text-danger font-monospace">Memory usage</td>
+            <td>{{ .MemoryUsed}} kib</td>
+            <td class="text-danger font-monospace">Handler</td>
+            <td><code>{{ .RequestHandler}}</code></td>
+        </tr>
+    </table>
+</div>
+{{if .ResponseErr }}
+    <div class="row p-3 align-items-start">
+        <p class="p-0">Error response</p>
+        <table class="table table-sm table-bordered">
+            <tr>
+                <td class="text-danger font-monospace">{{.ResponseErr}}</td>
+            </tr>
+        </table>
+    </div>
+{{end}}
+{{if .RequestHeaders }}
+    <div class="row p-3 align-items-start">
+        <p class="p-0">Request headers</p>
+        <table class="table table-sm table-bordered">
+            {{range $key, $val := .RequestHeaders}}
+                <tr>
+                    <td><code>{{$key}}</code></td>
+                    <td class=""><code>{{index $val 0}}</code></td>
+                </tr>
+            {{end}}
+        </table>
+    </div>
+{{end}}
+{{if .ResponseHeaders }}
+    <div class="row p-3 align-items-start">
+        <p class="p-0">Response headers</p>
+        <table class="table table-sm table-bordered">
+            {{range $header := .ResponseHeaders}}
+                <tr>
+                    <td><code>{{$header.Name}}</code></td>
+                    <td class=""><code>{{$header.Value}}</code></td>
+                </tr>
+            {{end}}
+        </table>
+    </div>
+{{end}}
+{{if .ErrTrace }}
+    <div class="row p-3 align-items-start">
+        <p class="p-0">Stack trace</p>
+        <table class="table table-sm table-bordered">
+            <tr>
+                <th><small>Frame name</small></th>
+                <th><small>File</small></th>
+                <th><small>Line</small></th>
+            </tr>
+            {{range $frame := .ErrTrace}}
+                <tr>
+                    <td><code>{{$frame.Name}}</code></td>
+                    <td><code>{{$frame.File}}</code></td>
+                    <td class="text-center"><code>{{$frame.Line}}</code></td>
+                </tr>
+            {{end}}
+        </table>
+    </div>
+{{end}}
+{{if .SqlQueries }}
+    <div class="row p-3 align-items-start">
+        <p class="p-0">Database</p>
+        <table class="table table-sm table-bordered ">
+            <tr>
+                <th><small>Query</small></th>
+                <th><small>Duration</small></th>
+                <th><small>Args</small></th>
+            </tr>
+            {{range $query := .SqlQueries}}
+                <tr>
+                    <td><code>{{$query.Query}}</code></td>
+                    <td><code>{{$query.Duration}}.s</code></td>
+                    <td><code>{{$query.Args}}</code></td>
+                </tr>
+            {{end}}
+            <tr>
+                <td><small>Total query time</small></td>
+                <td colspan="2" class="text-center"><small>{{.TotalQExecTimeString}}</small></td>
+            </tr>
+        </table>
+    </div>
+{{end}}
+{% end %}
