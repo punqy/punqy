@@ -9,6 +9,8 @@ import (
 func RouterConfig(container *Container) punqy.RouterConfig {
 	return punqy.RouterConfig{
 		Middlewares: punqy.MiddlewareChain{
+			container.ProfilerMiddleware.Handle,
+			container.HttpFirewall.Handle,
 		},
 		StaticFiles: &punqy.StaticFiles{
 			Path:    "/static/*filepath",

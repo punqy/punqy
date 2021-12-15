@@ -5,6 +5,7 @@ import (
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/app"
 	logger "github.com/sirupsen/logrus"
+	_ "net/http/pprof"
 	"os"
 )
 

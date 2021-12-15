@@ -16,6 +16,7 @@ type Container struct {
 	PasswordEncoder    punqy.PasswordEncoder
 	OAuthAuthenticator punqy.OAuthAuthenticator
 	ProfilerManager    punqy.Manager
+	ProfilerMiddleware punqy.HttpProfilerMiddleware
 	TemplatingEngine   punqy.Engine
 	punqy.ModuleHttpServer
 	punqy.ModuleStorage
@@ -47,6 +48,9 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 		app.ModuleConfig.Config().OauthRefreshTokenTTL)
 
 	app.ProfilerManager = punqy.NewManager(app.ModuleConfig.Config().ProfilerDir)
+	app.ProfilerMiddleware = punqy.NewProfilerMiddleware(
+		app.ModuleConfig.Config().ProfilerMiddlewareEnabled,
+		app.ProfilerManager)
 	app.TemplatingEngine = punqy.NewEngine(app.ModuleConfig.Config().TemplateDir, TemplatingConfig())
 	app.ModuleHttpHandlers = httphandler.NewModule(app.OAuth, app.ProfilerManager, app.TemplatingEngine)
 	app.OAuthAuthenticator = punqy.NewOAuthAuthenticator(

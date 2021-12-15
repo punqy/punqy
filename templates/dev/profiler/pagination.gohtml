@@ -1,0 +1,27 @@
+{{$pagination := .}}
+{{if gt .PageCount 1 }}
+    <nav>
+        <ul class="pagination justify-content-end rounded-0">
+            <li class="page-item {{if eq $pagination.Previous 0 }} disabled {{end}}">
+                <a class="rounded-0 page-link" href="?page={{$pagination.Previous}}&limit={{$pagination.Limit}}">Previous</a>
+            </li>
+            {{$currenPage := $pagination.Page}}
+            {{range $page := $pagination.Pages}}
+                {{if not (eq $page $currenPage) }}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{$page}}&limit={{$pagination.Limit}}">{{$page}}</a>
+                    </li>
+                {{end}}
+                {{if eq $page $currenPage }}
+                    <li class="page-item active">
+                        <a class="page-link " href="#">{{$page}}</a>
+                    </li>
+                {{end}}
+            {{end}}
+            <li class="page-item {{if eq $pagination.Next 0 }} disabled {{end}}">
+                <a class="rounded-0 page-link" href="?page={{$pagination.Next}}&limit={{$pagination.Limit}}">Next</a>
+            </li>
+        </ul>
+    </nav>
+{{end}}
+

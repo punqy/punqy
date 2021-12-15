@@ -40,12 +40,24 @@ func (h *profilerHandler) debugCharts(req punqy.Request) punqy.Response {
 }
 
 func (h *profilerHandler) index(req punqy.Request) punqy.Response {
+	var page []punqy.Profile
 	list, err := h.manager.List()
 	if err != nil {
 		return punqy.NewResponse([]byte(err.Error()), err, nethttp.StatusOK)
 	}
-	pager := common.PaginationFromReq(req, 10)
-	html, err := h.templating.Render("dev/profiler/list.gohtml", punqy.Vars{"pagination": pager, "req": req})
+	pagination := common.PaginationFromReq(req, 10)
+	total := len(list)
+	ol := pagination.ToStorage()
+	rBorder := int(ol.Offset + ol.Limit)
+	lBorder := ol.Offset
+	if rBorder > len(list) {
+		rBorder = len(list)
+	}
+	for _, profile := range list[lBorder:rBorder] {
+		page = append(page, profile)
+	}
+	htmlPagination := common.NewHtmlPagination(pagination, page, total, "/dev/profiler/")
+	html, err := h.templating.Render("dev/profiler/list.gohtml", punqy.Vars{"pagination": htmlPagination, "req": req})
 	if err != nil {
 		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
 	}

@@ -13,3 +13,7 @@ require (
 	github.com/slmder/qbuilder v0.6.4
 	github.com/spf13/cobra v1.2.1
 )
+
+replace (
+	"github.com/punqy/core" => "/home/sergey/GolangProjects/src/github.com/punqy/core"
+)
