@@ -213,10 +213,10 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/posener/complete v1.1.1/go.mod h1:em0nMJCgc9GFtwrmVmEMR/ZL6WyhyjMBndrE9hABlRI=
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
-github.com/punqy/core v0.0.0-20211214112915-9a7a001d0401 h1:gyMqFmzkdEUUMFxj6G+hjBFFm27QohWN7zUOoGnli1o=
-github.com/punqy/core v0.0.0-20211214112915-9a7a001d0401/go.mod h1:NObBhts0isuigoMfbj4K1SFTzUh35bRnE16/KVYk58Y=
 github.com/punqy/core v0.0.0-20211214172407-2e4dec7066b4 h1:fTFShOGOtIXlyvnGuOlZ8q2ZcN1Yh1mdel2sgH0I/Iw=
 github.com/punqy/core v0.0.0-20211214172407-2e4dec7066b4/go.mod h1:xaBvMUleP2r/JezHTDu3GltqRRAsaKIIq3CZO3GgjsA=
+github.com/punqy/core v0.0.0-20211215142027-9ee9a3543521 h1:4LeoW/Q6znkrMpDNv9g2PW5N8va6Mw22A+GWMnislik=
+github.com/punqy/core v0.0.0-20211215142027-9ee9a3543521/go.mod h1:xaBvMUleP2r/JezHTDu3GltqRRAsaKIIq3CZO3GgjsA=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=

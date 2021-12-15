@@ -15,6 +15,8 @@ type Container struct {
 	SecurityConfig     punqy.SecurityConfig
 	PasswordEncoder    punqy.PasswordEncoder
 	OAuthAuthenticator punqy.OAuthAuthenticator
+	ProfilerManager    punqy.Manager
+	TemplatingEngine   punqy.Engine
 	punqy.ModuleHttpServer
 	punqy.ModuleStorage
 	config.ModuleConfig
@@ -44,7 +46,9 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 		app.ModuleConfig.Config().OauthAccessTokenTTL,
 		app.ModuleConfig.Config().OauthRefreshTokenTTL)
 
-	app.ModuleHttpHandlers = httphandler.NewModule(app.OAuth)
+	app.ProfilerManager = punqy.NewManager(app.ModuleConfig.Config().ProfilerDir)
+	app.TemplatingEngine = punqy.NewEngine(app.ModuleConfig.Config().TemplateDir, TemplatingConfig())
+	app.ModuleHttpHandlers = httphandler.NewModule(app.OAuth, app.ProfilerManager, app.TemplatingEngine)
 	app.OAuthAuthenticator = punqy.NewOAuthAuthenticator(
 		app.ModuleRepository.AccessTokenRepository(),
 		app.ModuleRepository.ClientRepository(),

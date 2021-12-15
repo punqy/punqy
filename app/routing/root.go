@@ -10,6 +10,10 @@ func Root(handlers httphandler.ModuleHttpHandlers) punqy.Route {
 		Path: "/",
 		Inner: punqy.RouteList{
 			punqy.Route{
+				Path:  "/dev",
+				Inner: Dev(handlers),
+			},
+			punqy.Route{
 				Path:  "/api",
 				Inner: Api(handlers),
 			},

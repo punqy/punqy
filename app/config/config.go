@@ -18,4 +18,6 @@ type Config struct {
 	OauthRefreshTokenTTL int    `env:"OAUTH_REFRESH_TOKEN_TTL,default=2880"`
 	MigrationsDir        string `env:"MIGRATIONS_DIR,default=migrations"`
 	MigrationsTableName  string `env:"MIGRATIONS_TABLE_NAME,default=migration_versions"`
+	ProfilerDir          string `env:"PROFILER_DIR,default=var/profiler"`
+	TemplateDir          string `env:"TEMPLATE_DIR,default=templates"`
 }

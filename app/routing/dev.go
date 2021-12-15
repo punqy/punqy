@@ -7,5 +7,6 @@ import (
 
 func Dev(handlers httphandler.ModuleHttpHandlers) punqy.RouteList {
 	return punqy.RouteList{
+		punqy.Route{Path: "/profiler", Inner: handlers.ProfilerHandler().Routes()},
 	}
 }
