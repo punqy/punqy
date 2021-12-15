@@ -2,6 +2,7 @@ package dev
 
 import (
 	punqy "github.com/punqy/core"
+	"github.com/punqy/punqy/model/http/common"
 	nethttp "net/http"
 )
 
@@ -43,7 +44,8 @@ func (h *profilerHandler) index(req punqy.Request) punqy.Response {
 	if err != nil {
 		return punqy.NewResponse([]byte(err.Error()), err, nethttp.StatusOK)
 	}
-	html, err := h.templating.Render("dev/profiler/list.gohtml", punqy.Vars{"pagination": pagination, "req": req})
+	pager := common.PaginationFromReq(req, 10)
+	html, err := h.templating.Render("dev/profiler/list.gohtml", punqy.Vars{"pagination": pager, "req": req})
 	if err != nil {
 		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
 	}
