@@ -28,6 +28,28 @@ func Commands() punqy.Commands {
 			},
 		},
 		punqy.Command{
+			Use:   "create-oauth-client",
+			Short: "Create oauth client",
+			Long:  "",
+			Args:  nil,
+			Run: func(cmd *cobra.Command, args []string) {
+				ctx := context.Background()
+				registry, err := BuildRegistry(ctx)
+				if err != nil {
+					logger.Error(err)
+					return
+				}
+				client, err := registry.ClientRepository().NewOauthClient(ctx)
+				if err != nil {
+					logger.Error(err)
+					return
+				}
+				logger.Infof("OAuth client created")
+				logger.Infof("Id: %s", client.ID)
+				logger.Infof("Secret: %s", client.ClientSecret)
+			},
+		},
+		punqy.Command{
 			Use:   "migration",
 			Short: "migration",
 			Args:  cobra.MinimumNArgs(1),
