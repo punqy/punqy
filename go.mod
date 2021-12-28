@@ -8,12 +8,10 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
 	github.com/pkg/errors v0.9.1
-	github.com/punqy/core v0.0.0-20211217174038-d9a1909aab35
+	github.com/punqy/core v0.0.0-20211228105217-89a99607d468
 	github.com/sethvargo/go-envconfig v0.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/slmder/migrate v0.4.0
 	github.com/slmder/qbuilder v0.7.0
 	github.com/spf13/cobra v1.2.1
 )
-
-replace github.com/punqy/core => /home/sergey/Документы/Development/src/github.com/punqy/core

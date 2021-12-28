@@ -217,6 +217,8 @@ github.com/posener/complete v1.1.1/go.mod h1:em0nMJCgc9GFtwrmVmEMR/ZL6WyhyjMBndr
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
 github.com/punqy/core v0.0.0-20211217174038-d9a1909aab35 h1:yxne58C7Guh1ON3Af4C76cNbTK3ie5cGY8iZ5n+WAxk=
 github.com/punqy/core v0.0.0-20211217174038-d9a1909aab35/go.mod h1:+v8OA404YmOoL4jaDPADpv867x3d1Abmx/Bequ7v4Dk=
+github.com/punqy/core v0.0.0-20211228105217-89a99607d468 h1:1N9oNTBj74QuMagwMO0Uoa5jiUoNyBMGF0e1ezJ0UjE=
+github.com/punqy/core v0.0.0-20211228105217-89a99607d468/go.mod h1:XcYIwSi/d2NG7p+mbUaw/5bI69UjdfXofyf4Cc1YomM=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
