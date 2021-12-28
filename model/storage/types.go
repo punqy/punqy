@@ -10,7 +10,7 @@ import (
 )
 
 type Entity struct {
-	ID        uuid.UUID `json:"id" db:"id"`
+	ID        uuid.UUID  `json:"id" db:"id"`
 	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
 	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
 	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
@@ -32,6 +32,14 @@ func NewEntity() (Entity, error) {
 	}
 	e.ID = id
 	return e, nil
+}
+
+func (e *Entity) Init() error {
+	e.CreatedAt = time.Now()
+	e.UpdatedAt = time.Now()
+	id, err := uuid.NewUUID()
+	e.ID = id
+	return err
 }
 
 func (e *Entity) NewId() error {

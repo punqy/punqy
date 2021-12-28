@@ -49,34 +49,19 @@ func (r *refreshTokenRepository) Create(ctx context.Context, values punqy.OAuthR
 		ClientId:  cid,
 		ExpiresAt: values.ExpiresAt,
 	}
-	if err := e.NewId(); err != nil {
+	if err := e.Init(); err != nil {
 		return err
 	}
 	return r.Insert(ctx, &e)
 }
 
 func (r *refreshTokenRepository) Insert(ctx context.Context, entity *model.RefreshToken) error {
-	sql := r.BuildInsert(tables.OAuthRefreshToken).
-		Columns("id", "token", "user_id", "client_id", "expires_at", "created_at", "updated_at").
-		Value(":id, :token, :user_id, :client_id, :expires_at, now(), now()").
-		ToSQL()
-
-	_, err := r.DoInsert(ctx, sql, entity)
+	_, err := r.InsertE(ctx, tables.OAuthRefreshToken, entity)
 	return r.PipeErr(err)
 }
 
 func (r *refreshTokenRepository) Update(ctx context.Context, entity punqy.OAuthRefreshToken) error {
-	query := r.BuildUpdate(tables.OAuthRefreshToken).
-		SetMap(punqy.StringMap{
-			"user_id":    ":user_id",
-			"client_id":  ":client_id",
-			"expires_at": ":expires_at",
-			"updated_at": "now()",
-		}).
-		Where("id = :id").
-		ToSQL()
-
-	_, err := r.DoUpdate(ctx, query, entity)
+	_, err := r.UpdateE(ctx, tables.OAuthRefreshToken, entity)
 	return r.PipeErr(err)
 }
 

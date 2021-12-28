@@ -57,19 +57,14 @@ func (r *accessTokenRepository) Create(ctx context.Context, values punqy.OAuthAc
 		ClientId:  cid,
 		ExpiresAt: values.ExpiresAt,
 	}
-	if err := e.NewId(); err != nil {
+	if err := e.Init(); err != nil {
 		return err
 	}
 	return r.Insert(ctx, &e)
 }
 
 func (r *accessTokenRepository) Insert(ctx context.Context, entity *model.AccessToken) error {
-	sql := r.BuildInsert(tables.OAuthAccessToken).
-		Columns("id", "token", "user_id", "client_id", "expires_at", "created_at", "updated_at").
-		Value(":id, :token, :user_id, :client_id, :expires_at, now(), now()").
-		ToSQL()
-
-	_, err := r.DoInsert(ctx, sql, entity)
+	_, err := r.InsertE(ctx, tables.OAuthAccessToken, entity)
 	return r.PipeErr(err)
 }
 

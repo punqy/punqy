@@ -29,7 +29,7 @@ func (r *clientRepository) NewOauthClient(ctx context.Context) (model.OAuthClien
 		GrantTypes:   model.StringList{punqy.GrantTypeRefreshToken.String(), punqy.ClientCredentials.String(), punqy.GrantTypePassword.String()},
 		ClientSecret: fmt.Sprintf("cs_%s", punqy.RandomString(64)),
 	}
-	if err := e.NewId(); err != nil {
+	if err := e.Init(); err != nil {
 		return e, err
 	}
 
@@ -39,22 +39,20 @@ func (r *clientRepository) NewOauthClient(ctx context.Context) (model.OAuthClien
 	return e, nil
 }
 
-func (r *clientRepository) Insert(ctx context.Context, entity *model.OAuthClient) error {
-	sql := r.BuildInsert(tables.OAuthClient).RowE(entity).ToSQL()
-	_, err := r.DoInsert(ctx, sql, entity)
-	return r.PipeErr(err)
-}
-
 func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Context, cID, sec string, gt punqy.GrantType) (punqy.OAuthClient, error) {
 	var entity model.OAuthClient
-	query := r.BuildSelectE(entity).
+	query := r.SelectE(entity).
 		From(tables.OAuthClient).
-		AndWhere("id = $1").
-		AndWhere("client_secret = $2").
+		Where("id = $1 AND client_secret = $2").
 		AndWhere("$3 IN (select jsonb_array_elements_text(allowed_grant_types))").
 		Limit(1).
 		ToSQL()
 	return entity, r.PipeErr(r.DoSelectOne(ctx, &entity, query, cID, sec, gt))
+}
+
+func (r *clientRepository) Insert(ctx context.Context, entity *model.OAuthClient) error {
+	_, err := r.InsertE(ctx, tables.OAuthClient, entity)
+	return r.PipeErr(err)
 }
 
 func (r *clientRepository) FindBy(ctx context.Context, cond qbuilder.Conditions, pager punqy.Pagination) ([]model.OAuthClient, error) {
