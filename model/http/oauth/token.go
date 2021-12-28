@@ -14,3 +14,14 @@ type GrantAccessTokenRequest struct {
 func (r GrantAccessTokenRequest) ToPunqyRequest() punqy.GrantAccessTokenRequest {
 	return punqy.GrantAccessTokenRequest(r)
 }
+
+type GrantAccessTokenResponse struct {
+	AccessToken           string `json:"accessToken"`
+	RefreshToken          string `json:"refreshToken"`
+	AccessTokenExpiresAt  int64  `json:"accessTokenExpiresAt"`
+	RefreshTokenExpiresAt int64  `json:"refreshTokenExpiresAt"`
+}
+
+func FromPunqyResponse(r punqy.GrantAccessTokenResponse) GrantAccessTokenResponse {
+	return GrantAccessTokenResponse(r)
+}

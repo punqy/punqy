@@ -14,10 +14,13 @@ const (
 
 type User struct {
 	Entity
-	Email     string     `json:"email" db:"token"`
 	Username  string     `json:"username" db:"username"`
 	Password  string     `json:"password" db:"password"`
 	Roles     StringList `json:"roles" db:"roles"`
+}
+
+func (u User) GetPassword() string {
+	return u.Password
 }
 
 func (u User) GetID() string {

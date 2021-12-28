@@ -47,7 +47,8 @@ func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Conte
 		AndWhere("$3 IN (select jsonb_array_elements_text(allowed_grant_types))").
 		Limit(1).
 		ToSQL()
-	return entity, r.PipeErr(r.DoSelectOne(ctx, &entity, query, cID, sec, gt))
+	err := r.DoSelectOne(ctx, &entity, query, cID, sec, gt)
+	return entity, r.PipeErr(err)
 }
 
 func (r *clientRepository) Insert(ctx context.Context, entity *model.OAuthClient) error {

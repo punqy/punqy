@@ -44,6 +44,7 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 		app.ModuleRepository.AccessTokenRepository(),
 		app.ModuleRepository.RefreshTokenRepository(),
 		app.PasswordEncoder,
+		app.ModuleRepository.UserRepository(),
 		app.ModuleConfig.Config().OauthAccessTokenTTL,
 		app.ModuleConfig.Config().OauthRefreshTokenTTL)
 
@@ -51,12 +52,14 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 	app.ProfilerMiddleware = punqy.NewProfilerMiddleware(
 		app.ModuleConfig.Config().ProfilerMiddlewareEnabled,
 		app.ProfilerManager)
+
 	app.TemplatingEngine = punqy.NewEngine(app.ModuleConfig.Config().TemplateDir, TemplatingConfig())
 	app.ModuleHttpHandlers = httphandler.NewModule(app.OAuth, app.ProfilerManager, app.TemplatingEngine)
 	app.OAuthAuthenticator = punqy.NewOAuthAuthenticator(
 		app.ModuleRepository.AccessTokenRepository(),
 		app.ModuleRepository.ClientRepository(),
 		app.ModuleRepository.UserRepository())
+
 	app.SecurityConfig = SecurityConfig(app.OAuthAuthenticator)
 
 	app.HttpFirewall = punqy.NewFirewall(

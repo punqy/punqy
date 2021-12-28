@@ -5,6 +5,7 @@ import (
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/app/config"
 	"github.com/punqy/punqy/migrations"
+	"github.com/punqy/punqy/model/storage"
 	logger "github.com/sirupsen/logrus"
 	"github.com/slmder/migrate"
 	"github.com/spf13/cobra"
@@ -25,6 +26,34 @@ func Commands() punqy.Commands {
 					return
 				}
 				registry.HttpServer().Serve(ctx)
+			},
+		},
+		punqy.Command{
+			Use:   "create-admin",
+			Short: "Create def user",
+			Long:  "",
+			Args:  nil,
+			Run: func(cmd *cobra.Command, args []string) {
+				ctx := context.Background()
+				registry, err := BuildRegistry(ctx)
+				if err != nil {
+					logger.Error(err)
+					return
+				}
+				password, err := registry.PasswordEncoder.EncodePassword("Qwerty123", nil)
+				if err != nil {
+					logger.Error(err)
+					return
+				}
+				u := storage.User{Username: "admin@admin.com", Password: password, Roles: storage.StringList{storage.RoleSuperAdmin}}
+				if err := u.Init(); err != nil {
+					logger.Error(err)
+					return
+				}
+				if err := registry.UserRepository().Insert(ctx, u); err != nil {
+					logger.Error(err)
+					return
+				}
 			},
 		},
 		punqy.Command{

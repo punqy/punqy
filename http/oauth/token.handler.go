@@ -39,5 +39,5 @@ func (h *tokenHandler) getToken(req punqy.Request) punqy.Response {
 	if err != nil {
 		return punqy.NewErrorJsonResponse(err)
 	}
-	return punqy.NewJsonResponse(response, nethttp.StatusOK, nil)
+	return punqy.NewJsonResponse(oauth.GrantAccessTokenResponse(response), nethttp.StatusOK, nil)
 }
