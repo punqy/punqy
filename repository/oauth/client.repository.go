@@ -11,9 +11,9 @@ import (
 )
 
 type ClientRepository interface {
-	Find(ctx context.Context, id uuid.UUID) (punqy.OAuthClient, error)
-	FindOneByClientIdSecretAndGrantType(ctx context.Context, cid uuid.UUID, sec string, gt punqy.GrantType) (punqy.OAuthClient, error)
-	Insert(ctx context.Context, entity *model.OAuthClient) error
+	Find(ctx context.Context, id uuid.UUID) (model.OAuthClient, error)
+	FindOneByClientIdSecretAndGrantType(ctx context.Context, cid uuid.UUID, sec string, gt punqy.GrantType) (model.OAuthClient, error)
+	Insert(ctx context.Context, entity model.OAuthClient) error
 	NewOauthClient(ctx context.Context) (model.OAuthClient, error)
 }
 
@@ -34,13 +34,13 @@ func (r *clientRepository) NewOauthClient(ctx context.Context) (model.OAuthClien
 		return e, err
 	}
 
-	if err := r.Insert(ctx, &e); err != nil {
+	if err := r.Insert(ctx, e); err != nil {
 		return model.OAuthClient{}, err
 	}
 	return e, nil
 }
 
-func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Context, cid uuid.UUID, sec string, gt punqy.GrantType) (punqy.OAuthClient, error) {
+func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Context, cid uuid.UUID, sec string, gt punqy.GrantType) (model.OAuthClient, error) {
 	var entity model.OAuthClient
 	query := r.SelectE(entity).
 		From(tables.OAuthClient).
@@ -52,7 +52,7 @@ func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Conte
 	return entity, r.PipeErr(err)
 }
 
-func (r *clientRepository) Insert(ctx context.Context, entity *model.OAuthClient) error {
+func (r *clientRepository) Insert(ctx context.Context, entity model.OAuthClient) error {
 	_, err := r.InsertE(ctx, tables.OAuthClient, entity)
 	return r.PipeErr(err)
 }
@@ -67,6 +67,6 @@ func (r *clientRepository) FindOneBy(ctx context.Context, cond qbuilder.Conditio
 	return entity, r.Dal.FindOneBy(ctx, tables.OAuthClient, &entity, cond)
 }
 
-func (r *clientRepository) Find(ctx context.Context, id uuid.UUID) (punqy.OAuthClient, error) {
+func (r *clientRepository) Find(ctx context.Context, id uuid.UUID) (model.OAuthClient, error) {
 	return r.FindOneBy(ctx, qbuilder.Conditions{"id": id})
 }
