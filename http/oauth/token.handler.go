@@ -3,7 +3,6 @@ package oauth
 import (
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/model/http/oauth"
-	"github.com/punqy/punqy/service/form"
 	nethttp "net/http"
 )
 
@@ -32,8 +31,8 @@ func (h *tokenHandler) getToken(req punqy.Request) punqy.Response {
 	if err := req.ParseForm(&request); err != nil {
 		return punqy.NewErrorJsonResponse(err)
 	}
-	if err := form.GetError(request); err != nil {
-		return form.NewValidationErrJsonResponse(err)
+	if err := request.Validate(); err != nil {
+		return punqy.NewValidationErrJsonResponse(err)
 	}
 	response, err := h.oauth.GrantAccessToken(req.Context(), request.ToPunqyRequest())
 	if err != nil {

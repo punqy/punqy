@@ -9,7 +9,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
 	github.com/pkg/errors v0.9.1
-	github.com/punqy/core v0.0.0-20211228125637-d9846a5f9062
+	github.com/punqy/core v0.0.0-20220128212947-e010ef317451
 	github.com/sethvargo/go-envconfig v0.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/slmder/migrate v0.4.0
@@ -21,4 +21,4 @@ require (
 //replace github.com/punqy/core => /home/sergey/Документы/Development/src/github.com/punqy/core
 
 // Home
-replace github.com/punqy/core => /home/sergey/GolangProjects/src/github.com/punqy/core
+//replace github.com/punqy/core => /home/sergey/GolangProjects/src/github.com/punqy/core

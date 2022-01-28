@@ -23,6 +23,10 @@ func (u User) GetPassword() string {
 	return u.Password
 }
 
+func (u User) GetUsername() string {
+	return u.Username
+}
+
 func (u User) GetID() string {
 	return u.ID.String()
 }

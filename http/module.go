@@ -24,7 +24,7 @@ func (m *module) OAuthTokenHandler() oauth.TokenHandler {
 	return m.oauthTokenHandler
 }
 
-func NewModule(auth punqy.OAuth, profiler punqy.Manager, templating punqy.Engine) ModuleHttpHandlers {
+func NewModule(auth punqy.OAuth, profiler punqy.ProfilerManager, templating punqy.TemplatingEngine) ModuleHttpHandlers {
 	var m module
 	m.oauthTokenHandler = oauth.NewTokenHandler(auth)
 	m.profilerHandler = dev.NewProfilerHandler(profiler, templating)

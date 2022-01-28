@@ -3,6 +3,7 @@ package oauth
 import (
 	"context"
 	"fmt"
+	"github.com/google/uuid"
 	punqy "github.com/punqy/core"
 	model "github.com/punqy/punqy/model/storage"
 	"github.com/punqy/punqy/repository/tables"
@@ -10,8 +11,8 @@ import (
 )
 
 type ClientRepository interface {
-	Find(ctx context.Context, id string) (punqy.OAuthClient, error)
-	FindOneByClientIdSecretAndGrantType(ctx context.Context, cID, sec string, gt punqy.GrantType) (punqy.OAuthClient, error)
+	Find(ctx context.Context, id uuid.UUID) (punqy.OAuthClient, error)
+	FindOneByClientIdSecretAndGrantType(ctx context.Context, cid uuid.UUID, sec string, gt punqy.GrantType) (punqy.OAuthClient, error)
 	Insert(ctx context.Context, entity *model.OAuthClient) error
 	NewOauthClient(ctx context.Context) (model.OAuthClient, error)
 }
@@ -39,7 +40,7 @@ func (r *clientRepository) NewOauthClient(ctx context.Context) (model.OAuthClien
 	return e, nil
 }
 
-func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Context, cID, sec string, gt punqy.GrantType) (punqy.OAuthClient, error) {
+func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Context, cid uuid.UUID, sec string, gt punqy.GrantType) (punqy.OAuthClient, error) {
 	var entity model.OAuthClient
 	query := r.SelectE(entity).
 		From(tables.OAuthClient).
@@ -47,7 +48,7 @@ func (r *clientRepository) FindOneByClientIdSecretAndGrantType(ctx context.Conte
 		AndWhere("$3 IN (select jsonb_array_elements_text(allowed_grant_types))").
 		Limit(1).
 		ToSQL()
-	err := r.DoSelectOne(ctx, &entity, query, cID, sec, gt)
+	err := r.DoSelectOne(ctx, &entity, query, cid, sec, gt)
 	return entity, r.PipeErr(err)
 }
 
@@ -66,6 +67,6 @@ func (r *clientRepository) FindOneBy(ctx context.Context, cond qbuilder.Conditio
 	return entity, r.Dal.FindOneBy(ctx, tables.OAuthClient, &entity, cond)
 }
 
-func (r *clientRepository) Find(ctx context.Context, id string) (punqy.OAuthClient, error) {
+func (r *clientRepository) Find(ctx context.Context, id uuid.UUID) (punqy.OAuthClient, error) {
 	return r.FindOneBy(ctx, qbuilder.Conditions{"id": id})
 }

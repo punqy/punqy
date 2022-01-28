@@ -37,13 +37,13 @@ func NewEntity() (Entity, error) {
 func (e *Entity) Init() error {
 	e.CreatedAt = time.Now()
 	e.UpdatedAt = time.Now()
-	id, err := uuid.NewUUID()
+	id, err := uuid.NewRandom()
 	e.ID = id
 	return err
 }
 
 func (e *Entity) NewId() error {
-	uid, err := uuid.NewUUID()
+	uid, err := uuid.NewRandom()
 	if err != nil {
 		return err
 	}

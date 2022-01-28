@@ -11,11 +11,11 @@ type ProfilerHandler interface {
 }
 
 type profilerHandler struct {
-	templating punqy.Engine
-	manager    punqy.Manager
+	templating punqy.TemplatingEngine
+	manager    punqy.ProfilerManager
 }
 
-func NewProfilerHandler(manager punqy.Manager, templating punqy.Engine) ProfilerHandler {
+func NewProfilerHandler(manager punqy.ProfilerManager, templating punqy.TemplatingEngine) ProfilerHandler {
 	return &profilerHandler{
 		templating: templating,
 		manager:    manager,

@@ -13,15 +13,11 @@ type AccessToken struct {
 	ExpiresAt time.Time  `json:"expiresAt" db:"expires_at"`
 }
 
-func (t *AccessToken) Expired() bool {
+func (t AccessToken) Expired() bool {
 	return t.ExpiresAt.UTC().Unix() <= time.Now().Unix()
 }
 
-func (t *AccessToken) SetExpired() {
-	t.ExpiresAt = time.Now().UTC()
-}
-
-func (t *AccessToken) GetUserID() *string {
+func (t AccessToken) GetUserID() *string {
 	if t.UserId != nil {
 		uid := t.UserId.String()
 		return &uid
@@ -29,7 +25,7 @@ func (t *AccessToken) GetUserID() *string {
 	return nil
 }
 
-func (t *AccessToken) GetClientID() string {
+func (t AccessToken) GetClientID() string {
 	return t.ClientId.String()
 }
 
