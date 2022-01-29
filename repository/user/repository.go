@@ -10,9 +10,9 @@ import (
 )
 
 type Repository interface {
-	Find(ctx context.Context, id uuid.UUID) (punqy.User, error)
-	FindUserByID(ctx context.Context, id string) (punqy.User, error)
-	FindUserByUsername(ctx context.Context, username string) (punqy.User, error)
+	Find(ctx context.Context, id uuid.UUID) (storage.User, error)
+	FindUserByID(ctx context.Context, id uuid.UUID) (storage.User, error)
+	FindUserByUsername(ctx context.Context, username string) (storage.User, error)
 	Insert(ctx context.Context, entity storage.User) error
 }
 
@@ -24,15 +24,11 @@ func NewUserRepository(db punqy.Dal) Repository {
 	return &repository{Dal: db}
 }
 
-func (r *repository) FindUserByID(ctx context.Context, id string) (punqy.User, error) {
-	uid, err := uuid.Parse(id)
-	if err != nil {
-		return nil, err
-	}
-	return r.Find(ctx, uid)
+func (r *repository) FindUserByID(ctx context.Context, id uuid.UUID) (storage.User, error) {
+	return r.Find(ctx, id)
 }
 
-func (r *repository) FindUserByUsername(ctx context.Context, username string) (punqy.User, error) {
+func (r *repository) FindUserByUsername(ctx context.Context, username string) (storage.User, error) {
 	return r.FindOneBy(ctx, qbuilder.Conditions{
 		"username": username,
 	})
@@ -48,12 +44,12 @@ func (r *repository) FindBy(ctx context.Context, cond qbuilder.Conditions, pager
 	return entities, r.Dal.FindBy(ctx, tables.User, &entities, cond, pager)
 }
 
-func (r *repository) FindOneBy(ctx context.Context, cond qbuilder.Conditions) (punqy.User, error) {
+func (r *repository) FindOneBy(ctx context.Context, cond qbuilder.Conditions) (storage.User, error) {
 	var entity storage.User
 	err := r.Dal.FindOneBy(ctx, tables.User, &entity, cond)
 	return entity, r.PipeErr(err)
 }
 
-func (r *repository) Find(ctx context.Context, id uuid.UUID) (punqy.User, error) {
+func (r *repository) Find(ctx context.Context, id uuid.UUID) (storage.User, error) {
 	return r.FindOneBy(ctx, qbuilder.Conditions{"id": id})
 }

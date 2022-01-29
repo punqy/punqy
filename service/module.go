@@ -10,22 +10,22 @@ type ModuleService interface {
 	AccessTokenStorage() punqy.OAuthAccessTokenStorage
 	RefreshTokenStorage() punqy.OAuthRefreshTokenStorage
 	ClientStorage() punqy.OAuthClientStorage
-	UserStorage() punqy.UserStorage
+	UserManager() oauth.UserManager
 }
 
 type module struct {
 	accessTokenStorage  punqy.OAuthAccessTokenStorage
 	refreshTokenStorage punqy.OAuthRefreshTokenStorage
-	userStorage   punqy.UserStorage
-	clientStorage punqy.OAuthClientStorage
+	userManager         oauth.UserManager
+	clientStorage       punqy.OAuthClientStorage
 }
 
 func (m *module) ClientStorage() punqy.OAuthClientStorage {
 	return m.clientStorage
 }
 
-func (m *module) UserStorage() punqy.UserStorage {
-	return m.userStorage
+func (m *module) UserManager() oauth.UserManager {
+	return m.userManager
 }
 
 func (m *module) AccessTokenStorage() punqy.OAuthAccessTokenStorage {
@@ -40,7 +40,7 @@ func NewModule(repo repository.ModuleRepository, encoder punqy.PasswordEncoder) 
 	var m module
 	m.accessTokenStorage = oauth.NewAccessTokenStorage(repo.AccessTokenRepository(), repo.UserRepository())
 	m.refreshTokenStorage = oauth.NewRefreshTokenStorage(repo.RefreshTokenRepository(), repo.UserRepository())
-	m.userStorage = oauth.NewUserStorage(repo.UserRepository(), encoder)
+	m.userManager = oauth.NewUserManager(repo.UserRepository(), encoder)
 	m.clientStorage = oauth.NewClientStorage(repo.ClientRepository())
 	return &m
 }

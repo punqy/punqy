@@ -10,20 +10,20 @@ import (
 )
 
 type Container struct {
+	config.ModuleConfig
+	punqy.ModuleStorage
+	httphandler.ModuleHttpHandlers
+	service.ModuleService
+	punqy.ModuleHttpServer
+	repository.ModuleRepository
 	OAuth              punqy.OAuth
-	HttpFirewall       punqy.Firewall
 	SecurityConfig     punqy.SecurityConfig
-	PasswordEncoder    punqy.PasswordEncoder
-	OAuthAuthenticator punqy.OAuthAuthenticator
 	ProfilerManager    punqy.ProfilerManager
 	ProfilerMiddleware punqy.HttpProfilerMiddleware
+	PasswordEncoder    punqy.PasswordEncoder
+	HttpFirewall       punqy.Firewall
+	OAuthAuthenticator punqy.OAuthAuthenticator
 	TemplatingEngine   punqy.TemplatingEngine
-	punqy.ModuleHttpServer
-	punqy.ModuleStorage
-	config.ModuleConfig
-	repository.ModuleRepository
-	service.ModuleService
-	httphandler.ModuleHttpHandlers
 }
 
 func BuildRegistry(ctx context.Context) (*Container, error) {
@@ -43,8 +43,8 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 		app.ModuleService.ClientStorage(),
 		app.ModuleService.AccessTokenStorage(),
 		app.ModuleService.RefreshTokenStorage(),
-		app.ModuleService.UserStorage(),
-		app.ModuleRepository.UserRepository(),
+		app.ModuleService.UserManager(),
+		app.ModuleService.UserManager(),
 		app.ModuleConfig.Config().OauthAccessTokenTTL,
 		app.ModuleConfig.Config().OauthRefreshTokenTTL)
 
@@ -58,7 +58,7 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 	app.OAuthAuthenticator = punqy.NewOAuthAuthenticator(
 		app.ModuleService.AccessTokenStorage(),
 		app.ModuleService.ClientStorage(),
-		app.ModuleRepository.UserRepository())
+		app.ModuleService.UserManager())
 
 	app.SecurityConfig = SecurityConfig(app.OAuthAuthenticator)
 

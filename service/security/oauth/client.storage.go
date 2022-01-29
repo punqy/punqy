@@ -11,7 +11,6 @@ type ClientStorage struct {
 	clientRepo oauth.ClientRepository
 }
 
-
 func NewClientStorage(
 	clientRepo oauth.ClientRepository,
 ) punqy.OAuthClientStorage {
