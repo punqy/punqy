@@ -21,4 +21,6 @@ type Config struct {
 	ProfilerDir               string `env:"PROFILER_DIR,default=var/profiler"`
 	ProfilerMiddlewareEnabled bool   `env:"PROFILER_MIDDLEWARE_ENABLED,default=true"`
 	TemplateDir               string `env:"TEMPLATE_DIR,default=templates"`
+	JWTAccessTokenSigningKey  string `env:"JWT_ACCESS_TOKEN_SIGNING_KEY,default=JWT_ACCESS_TOKEN_SIGNING_KEY"`
+	JWTRefreshTokenSigningKey string `env:"JWT_REFRESH_TOKEN_SIGNING_KEY,default=JWT_ACCESS_TOKEN_SIGNING_KEY"`
 }

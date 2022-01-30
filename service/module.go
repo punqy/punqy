@@ -2,6 +2,7 @@ package service
 
 import (
 	punqy "github.com/punqy/core"
+	"github.com/punqy/punqy/app/config"
 	"github.com/punqy/punqy/repository"
 	"github.com/punqy/punqy/service/security/oauth"
 )
@@ -36,10 +37,10 @@ func (m *module) RefreshTokenStorage() punqy.OAuthRefreshTokenStorage {
 	return m.refreshTokenStorage
 }
 
-func NewModule(repo repository.ModuleRepository, encoder punqy.PasswordEncoder) ModuleService {
+func NewModule(repo repository.ModuleRepository, encoder punqy.PasswordEncoder, config config.ModuleConfig) ModuleService {
 	var m module
-	m.accessTokenStorage = oauth.NewAccessTokenStorage(repo.AccessTokenRepository(), repo.UserRepository())
-	m.refreshTokenStorage = oauth.NewRefreshTokenStorage(repo.RefreshTokenRepository(), repo.UserRepository())
+	m.accessTokenStorage = oauth.NewAccessTokenStorage(config.Config().JWTAccessTokenSigningKey, config.Config().OauthAccessTokenTTL)
+	m.refreshTokenStorage = oauth.NewRefreshTokenStorage(config.Config().JWTRefreshTokenSigningKey, config.Config().OauthRefreshTokenTTL)
 	m.userManager = oauth.NewUserManager(repo.UserRepository(), encoder)
 	m.clientStorage = oauth.NewClientStorage(repo.ClientRepository())
 	return &m

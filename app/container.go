@@ -37,7 +37,11 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 
 	app.ModuleRepository = repository.NewModule(app.ModuleStorage)
 	app.PasswordEncoder = punqy.NewPasswordEncoder()
-	app.ModuleService = service.NewModule(app.ModuleRepository, app.PasswordEncoder)
+
+	app.ModuleService = service.NewModule(
+		app.ModuleRepository,
+		app.PasswordEncoder,
+		app.ModuleConfig)
 
 	app.OAuth = punqy.NewOAuth(
 		app.ModuleService.ClientStorage(),
@@ -49,12 +53,20 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 		app.ModuleConfig.Config().OauthRefreshTokenTTL)
 
 	app.ProfilerManager = punqy.NewManager(app.ModuleConfig.Config().ProfilerDir)
+
 	app.ProfilerMiddleware = punqy.NewProfilerMiddleware(
 		app.ModuleConfig.Config().ProfilerMiddlewareEnabled,
 		app.ProfilerManager)
 
-	app.TemplatingEngine = punqy.NewTemplatingEngine(app.ModuleConfig.Config().TemplateDir, TemplatingConfig())
-	app.ModuleHttpHandlers = httphandler.NewModule(app.OAuth, app.ProfilerManager, app.TemplatingEngine)
+	app.TemplatingEngine = punqy.NewTemplatingEngine(
+		app.ModuleConfig.Config().TemplateDir,
+		TemplatingConfig())
+
+	app.ModuleHttpHandlers = httphandler.NewModule(
+		app.OAuth,
+		app.ProfilerManager,
+		app.TemplatingEngine)
+
 	app.OAuthAuthenticator = punqy.NewOAuthAuthenticator(
 		app.ModuleService.AccessTokenStorage(),
 		app.ModuleService.ClientStorage(),

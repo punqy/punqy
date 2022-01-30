@@ -27,7 +27,7 @@ func NewUserManager(
 	}
 }
 
-func (a *userManager) CheckCredentials(ctx context.Context, username, password string) (punqy.User, error) {
+func (a *userManager) CheckCredentials(ctx context.Context, username, password string) (punqy.UserInterface, error) {
 	usr, err := a.userRepo.FindUserByUsername(ctx, username)
 	if err != nil {
 		return nil, err
@@ -38,11 +38,11 @@ func (a *userManager) CheckCredentials(ctx context.Context, username, password s
 	return usr, nil
 }
 
-func (a *userManager) FindUserByUsername(ctx context.Context, username string) (punqy.User, error) {
+func (a *userManager) FindUserByUsername(ctx context.Context, username string) (punqy.UserInterface, error) {
 	return a.userRepo.FindUserByUsername(ctx, username)
 }
 
-func (a *userManager) FindUserByID(ctx context.Context, id string) (punqy.User, error)  {
+func (a *userManager) FindUserByID(ctx context.Context, id string) (punqy.UserInterface, error)  {
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return nil, err

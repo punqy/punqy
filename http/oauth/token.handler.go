@@ -23,6 +23,7 @@ func NewTokenHandler(oauth punqy.OAuth) TokenHandler {
 func (h *tokenHandler) Routes() punqy.RouteList {
 	return punqy.RouteList{
 		punqy.Route{Path: "/token", Method: punqy.POST, Handler: h.getToken},
+		punqy.Route{Path: "/test", Method: punqy.POST, Handler: h.test},
 	}
 }
 
@@ -39,4 +40,8 @@ func (h *tokenHandler) getToken(req punqy.Request) punqy.Response {
 		return punqy.NewErrorJsonResponse(err)
 	}
 	return punqy.NewJsonResponse(oauth.GrantAccessTokenResponse(response), nethttp.StatusOK, nil)
+}
+
+func (h *tokenHandler) test(req punqy.Request) punqy.Response {
+	return punqy.NewJsonResponse("ok", nethttp.StatusOK, nil)
 }

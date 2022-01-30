@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/uuid v1.1.2
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
@@ -21,4 +22,4 @@ require (
 //replace github.com/punqy/core => /home/sergey/Документы/Development/src/github.com/punqy/core
 
 // Home
-//replace github.com/punqy/core => /home/sergey/GolangProjects/src/github.com/punqy/core
+replace github.com/punqy/core => /home/sergey/GolangProjects/src/github.com/punqy/core
