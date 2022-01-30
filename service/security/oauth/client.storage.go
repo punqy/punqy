@@ -7,19 +7,19 @@ import (
 	"github.com/punqy/punqy/repository/oauth"
 )
 
-type ClientStorage struct {
+type clientStorage struct {
 	clientRepo oauth.ClientRepository
 }
 
 func NewClientStorage(
 	clientRepo oauth.ClientRepository,
 ) punqy.OAuthClientStorage {
-	return &ClientStorage{
+	return &clientStorage{
 		clientRepo: clientRepo,
 	}
 }
 
-func (a *ClientStorage) Find(ctx context.Context, id string) (punqy.OAuthClient, error) {
+func (a *clientStorage) Find(ctx context.Context, id string) (punqy.OAuthClient, error) {
 	var client punqy.OAuthClient
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -33,7 +33,7 @@ func (a *ClientStorage) Find(ctx context.Context, id string) (punqy.OAuthClient,
 	return client, nil
 }
 
-func (a *ClientStorage) GetClient(ctx context.Context, id string, secret string, grantType punqy.GrantType) (punqy.OAuthClient, error) {
+func (a *clientStorage) GetClient(ctx context.Context, id string, secret string, grantType punqy.GrantType) (punqy.OAuthClient, error) {
 	var client punqy.OAuthClient
 	uid, err := uuid.Parse(id)
 	if err != nil {

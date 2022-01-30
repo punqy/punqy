@@ -1,13 +1,23 @@
 {% extend dev/profiler/main.gohtml %}
 {% block header %}Profile {% end %}
-{% block header-toolbar %} <div class="text-danger">{{ .Id}}</div>{% end %}
+{% block header-toolbar %}
+<div class="text-danger">{{ .Id}}</div>{% end %}
 {% block css %}
 <style>
     .bordered {
         border-left: 2px dashed #dee2e6;
         padding-left: 10px !important;
     }
+
+    .header-val {
+        overflow-wrap: break-word;
+        word-break: break-all;
+    }
 </style>
+{% end %}
+{% block javascript %}
+<script>
+</script>
 {% end %}
 {% block body %}
 
@@ -20,7 +30,6 @@
 {{end}}
 <div class="row p-3 align-items-start">
     <p class="p-0">Request</p>
-
     <table class="table table-sm table-bordered">
         <tr>
             <td class="text-danger font-monospace">Id</td>
@@ -48,6 +57,34 @@
         </tr>
     </table>
 </div>
+{{if not (eq .RequestBody "") }}
+    <div class="row p-3 align-items-start">
+        <p class="p-0">Request body</p>
+        <div class="border p-1">
+            <pre class="m-0"><code class="text-danger">{{.RequestBody}}</code></pre>
+        </div>
+    </div>
+{{end}}
+
+{{if .SecurityContext }}
+    <div class="row p-3 align-items-start">
+        <p class="p-0">Security context</p>
+        <table class="table table-sm table-bordered">
+            <tr>
+                <td><code>Provider</code></td>
+                <td class=""><code>{{.SecurityContext.Provider}}</code></td>
+            </tr>
+            <tr>
+                <td><code>Username</code></td>
+                <td class=""><code>{{.SecurityContext.Username}}</code></td>
+            </tr>
+            <tr>
+                <td><code>User id</code></td>
+                <td class=""><code>{{.SecurityContext.UserID}}</code></td>
+            </tr>
+        </table>
+    </div>
+{{end}}
 {{if .ResponseErr }}
     <div class="row p-3 align-items-start">
         <p class="p-0">Error response</p>
@@ -59,13 +96,13 @@
     </div>
 {{end}}
 {{if .RequestHeaders }}
-    <div class="row p-3 align-items-start">
+    <div class="row p-3 align-items-start ">
         <p class="p-0">Request headers</p>
-        <table class="table table-sm table-bordered">
+        <table class="table table-sm table-bordered ">
             {{range $key, $val := .RequestHeaders}}
                 <tr>
                     <td><code>{{$key}}</code></td>
-                    <td class=""><code>{{index $val 0}}</code></td>
+                    <td class="header-val"><code>{{$val}}</code></td>
                 </tr>
             {{end}}
         </table>
@@ -75,10 +112,10 @@
     <div class="row p-3 align-items-start">
         <p class="p-0">Response headers</p>
         <table class="table table-sm table-bordered">
-            {{range $header := .ResponseHeaders}}
+            {{range $key, $val := .ResponseHeaders}}
                 <tr>
-                    <td><code>{{$header.Name}}</code></td>
-                    <td class=""><code>{{$header.Value}}</code></td>
+                    <td><code>{{$key}}</code></td>
+                    <td class="header-val"><code>{{$val}}</code></td>
                 </tr>
             {{end}}
         </table>

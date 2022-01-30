@@ -18,13 +18,13 @@ func PaginationFromReq(r punqy.Request, maxLimit int) Pagination {
 	p, err := strconv.Atoi(r.Get("page", strconv.Itoa(pag.Page)))
 	if err != nil {
 		p = 1
-		logger.Warnf("pagination invalid arg page %s", r.URL.Query().Get("page"))
+		logger.Warnf("pagination invalid arg page %s", r.URI().QueryArgs().Peek("page"))
 	}
 	pag.Page = p
 	l, err := strconv.Atoi(r.Get("limit", strconv.Itoa(maxLimit)))
 	if err != nil {
 		l = maxLimit
-		logger.Warnf("pagination invalid arg page %s", r.URL.Query().Get("limit"))
+		logger.Warnf("pagination invalid arg page %s", r.URI().QueryArgs().Peek("limit"))
 	}
 	if maxLimit < l {
 		l = maxLimit

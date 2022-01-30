@@ -3,6 +3,7 @@ package dev
 import (
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/model/http/common"
+	"github.com/valyala/fasthttp"
 	nethttp "net/http"
 )
 
@@ -25,7 +26,7 @@ func NewProfilerHandler(manager punqy.ProfilerManager, templating punqy.Templati
 func (h *profilerHandler) Routes() punqy.RouteList {
 	return punqy.RouteList{
 		punqy.Route{Path: "/debug-charts", Method: punqy.GET, Handler: h.debugCharts},
-		punqy.Route{Path: "/show/:id", Method: punqy.GET, Handler: h.get},
+		punqy.Route{Path: "/show/{id}", Method: punqy.GET, Handler: h.get},
 		punqy.Route{Path: "/last", Method: punqy.GET, Handler: h.last},
 		punqy.Route{Path: "/", Method: punqy.GET, Handler: h.index},
 	}
@@ -61,11 +62,11 @@ func (h *profilerHandler) index(req punqy.Request) punqy.Response {
 	if err != nil {
 		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
 	}
-	return punqy.NewHtmlResponse(html.Bytes(), nethttp.StatusOK)
+	return punqy.NewHtmlResponse(html.Bytes(), fasthttp.StatusOK)
 }
 
 func (h *profilerHandler) get(r punqy.Request) punqy.Response {
-	last, err := h.manager.Get(r.Params.ByName("id"))
+	last, err := h.manager.Get(r.UserValue("id").(string))
 	if err != nil {
 		return punqy.NewResponse([]byte(err.Error()), err, nethttp.StatusOK)
 	}

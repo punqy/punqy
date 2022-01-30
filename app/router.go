@@ -3,7 +3,7 @@ package app
 import (
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/app/routing"
-	nethttp "net/http"
+	"github.com/valyala/fasthttp"
 )
 
 func RouterConfig(container *Container) punqy.RouterConfig {
@@ -13,17 +13,20 @@ func RouterConfig(container *Container) punqy.RouterConfig {
 			container.HttpFirewall.Handle,
 		},
 		StaticFiles: &punqy.StaticFiles{
-			Path:    "/static/*filepath",
-			RootDir: "./public",
+			Path:    "/static/{filepath:*}",
+			RootDir: "public",
 		},
-		Routing:         routing.Root(container.ModuleHttpHandlers),
-		NotFoundHandler: nethttp.DefaultServeMux,
-		GlobalHandler: nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
-			if r.Header.Get("Access-Control-Request-Method") != "" {
-				w.Header().Set("Access-Control-Allow-Methods", w.Header().Get("Allow"))
-				w.Header().Set("Access-Control-Allow-Origin", "*")
+		Routing: routing.Root(container.ModuleHttpHandlers),
+		NotFoundHandler: func(ctx *fasthttp.RequestCtx) {
+			ctx.Response.SetStatusCode(fasthttp.StatusNotFound)
+			ctx.Response.ResetBody()
+		},
+		GlobalHandler: func(ctx *fasthttp.RequestCtx) {
+			if string(ctx.Request.Header.Peek("Access-Control-Request-Method")) != "" {
+				ctx.Request.Header.Set("Access-Control-Allow-Methods", string(ctx.Request.Header.Peek("Allow")))
+				ctx.Request.Header.Set("Access-Control-Allow-Origin", "*")
 			}
-			w.WriteHeader(nethttp.StatusNoContent)
-		}),
+			ctx.Response.SetStatusCode(fasthttp.StatusNoContent)
+		},
 	}
 }
