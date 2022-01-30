@@ -25,10 +25,10 @@ func NewProfilerHandler(manager punqy.ProfilerManager, templating punqy.Templati
 
 func (h *profilerHandler) Routes() punqy.RouteList {
 	return punqy.RouteList{
-		punqy.Route{Path: "/debug-charts", Method: punqy.GET, Handler: h.debugCharts},
-		punqy.Route{Path: "/show/{id}", Method: punqy.GET, Handler: h.get},
-		punqy.Route{Path: "/last", Method: punqy.GET, Handler: h.last},
-		punqy.Route{Path: "/", Method: punqy.GET, Handler: h.index},
+		punqy.Route{Path: "/debug-charts", Method: punqy.Get, Handler: h.debugCharts},
+		punqy.Route{Path: "/show/{id}", Method: punqy.Get, Handler: h.get},
+		punqy.Route{Path: "/last", Method: punqy.Get, Handler: h.last},
+		punqy.Route{Path: "/", Method: punqy.Get, Handler: h.index},
 	}
 }
 

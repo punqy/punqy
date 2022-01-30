@@ -22,8 +22,8 @@ func NewTokenHandler(oauth punqy.OAuth) TokenHandler {
 
 func (h *tokenHandler) Routes() punqy.RouteList {
 	return punqy.RouteList{
-		punqy.Route{Path: "/token", Method: punqy.POST, Handler: h.getToken},
-		punqy.Route{Path: "/test", Method: punqy.POST, Handler: h.test},
+		punqy.Route{Path: "/token", Method: punqy.Post, Handler: h.getToken},
+		punqy.Route{Path: "/test", Method: punqy.Post, Handler: h.test},
 	}
 }
 
