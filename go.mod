@@ -30,4 +30,4 @@ require (
 //replace github.com/punqy/core => /home/sergey/Документы/Development/src/github.com/punqy/core
 
 // Home
-replace github.com/punqy/core => /home/sergey/GolangProjects/src/github.com/punqy/core
+//replace github.com/punqy/core => /home/sergey/GolangProjects/src/github.com/punqy/core
