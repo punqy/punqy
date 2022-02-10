@@ -17,7 +17,11 @@ func NewUserValuesMiddleware() UserValuesMiddleware {
 }
 
 func (u *userValuesMiddleware) Handle(req punqy.Request, next punqy.Handler) punqy.Response {
-	req.SetUserValue(UserValueUser, req.UserValue(punqy.SecurityContextKey).(punqy.SecurityContext).Token.User())
+	ctx, ok := req.UserValue(punqy.SecurityContextKey).(punqy.SecurityContext)
+	if !ok {
+		return next(req)
+	}
+	req.SetUserValue(UserValueUser, ctx.Token.User())
 	return next(req)
 }
 

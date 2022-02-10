@@ -65,7 +65,7 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 
 	app.ModuleHttpHandlers = httphandler.NewModule(
 		app.ProfilerManager,
-		app.TemplatingEngine, v1.NewModule(app.OAuth, app.ModuleRepository))
+		app.TemplatingEngine, v1.NewModule(app.OAuth, app.ModuleRepository, app.ModuleService))
 
 	app.OAuthAuthenticator = punqy.NewOAuthAuthenticator(
 		app.ModuleService.AccessTokenStorage(),

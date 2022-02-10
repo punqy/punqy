@@ -1,0 +1,164 @@
+definitions:
+  common.ValidationError:
+    additionalProperties:
+      type: string
+    type: object
+  core.JsonResponseFormat:
+    properties:
+      code:
+        type: integer
+      payload: {}
+    type: object
+  storage.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+  user.ChangePasswordRequest:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
+  user.PatchProfileRequest:
+    properties:
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Get current (authentiacted) user's profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  $ref: '#/definitions/storage.User'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  type: string
+              type: object
+      summary: Get profile
+      tags:
+      - Profile
+    patch:
+      consumes:
+      - application/json
+      description: Patch current (authentiacted) user's profile
+      parameters:
+      - description: Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.PatchProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  type: string
+              type: object
+        "422":
+          description: validation error
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  $ref: '#/definitions/common.ValidationError'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  type: string
+              type: object
+      summary: Patch profile
+      tags:
+      - Profile
+  /profile/change-pass:
+    post:
+      consumes:
+      - application/json
+      description: Change password of current (authentiacted) user
+      parameters:
+      - description: Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  type: string
+              type: object
+        "422":
+          description: validation
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  $ref: '#/definitions/common.ValidationError'
+              type: object
+        "500":
+          description: internal error
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  type: string
+              type: object
+      summary: Change password
+      tags:
+      - Profile
+swagger: "2.0"

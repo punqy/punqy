@@ -4,7 +4,9 @@ import (
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/model/http/common"
 	"github.com/valyala/fasthttp"
+	"log"
 	nethttp "net/http"
+	"os"
 )
 
 type ProfilerHandler interface {
@@ -26,6 +28,7 @@ func NewProfilerHandler(manager punqy.ProfilerManager, templating punqy.Templati
 func (h *profilerHandler) Routes() punqy.RouteList {
 	return punqy.RouteList{
 		punqy.Route{Path: "/debug-charts", Method: punqy.Get, Handler: h.debugCharts},
+		punqy.Route{Path: "/swagger", Method: punqy.Get, Handler: h.swagger},
 		punqy.Route{Path: "/show/{id}", Method: punqy.Get, Handler: h.get},
 		punqy.Route{Path: "/last", Method: punqy.Get, Handler: h.last},
 		punqy.Route{Path: "/", Method: punqy.Get, Handler: h.index},
@@ -87,4 +90,21 @@ func (h *profilerHandler) last(r punqy.Request) punqy.Response {
 		return punqy.NewResponse([]byte(err.Error()), err, nethttp.StatusOK)
 	}
 	return punqy.NewHtmlResponse(content.Bytes(), nethttp.StatusOK)
+}
+
+func (h *profilerHandler) swagger(r punqy.Request) punqy.Response {
+	path, err := os.Getwd()
+	if err != nil {
+		log.Println(err)
+		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
+	}
+	dat, err := os.ReadFile(path + "/public/docs/swagger.json")
+	if err != nil {
+		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
+	}
+	html, err := h.templating.Render("dev/profiler/swagger_ui.gohtml", punqy.Vars{"data": string(dat)})
+	if err != nil {
+		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
+	}
+	return punqy.NewHtmlResponse(html.Bytes(), nethttp.StatusOK)
 }

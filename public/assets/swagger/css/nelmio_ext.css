@@ -1,0 +1,426 @@
+
+.select-css option {
+    font-weight: normal;
+}
+
+body {
+    margin: 0;
+    background: #f0f0f0;
+    font-family: Consolas, monaco, monospace !important;
+}
+
+body, .swagger-ui {
+    font-family: Consolas, monaco, monospace !important;
+}
+
+#swagger-ui.api-platform .wrapper {
+    padding: 0;
+}
+
+#swagger-ui.api-platform .btn.authorize:hover {
+    background-color: unset;
+}
+
+#swagger-ui.api-platform .btn {
+    transition: unset;
+}
+
+#draggable-area {
+    position: fixed;
+    top: 15px;
+    right: 0;
+    bottom: 0px;
+    left: 0;
+    z-index: -100;
+    overflow: auto;
+}
+
+.window {
+    position: fixed;
+    width: 920px;
+    height: 500px;
+    top: 88px;
+    left: 275px;
+    z-index: 1;
+    background: #51545E;
+    border-radius: 2px;
+}
+
+.frame {
+    position: relative;
+    width: 1220px;
+    height: 638px;
+    top: 0;
+    left: 3px;
+    border: none;
+    -ms-zoom: 0.75;
+    -moz-transform: scale(0.75);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.75);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.75);
+    -webkit-transform-origin: 0 0;
+}
+
+.mini > .frame {
+    display: none;
+}
+
+.mini.window {
+    width: 200px;
+    height: 20px;
+}
+
+.tingle-modal-box, .swagger-ui * {
+    font-family: Consolas, monaco, monospace !important;
+    font-weight: 100 !important;
+}
+
+.window-title {
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    top: -1px;
+    margin: 2px;
+    color: white;
+    font-size: 14px;
+    font-style: italic;
+    left: 3px;
+    font-family: Open Sans, sans-serif;
+}
+
+.close-window {
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    top: -1px;
+    margin: 2px;
+    /*left: 21px;*/
+    color: white;
+    float: right;
+}
+
+.new-tab {
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    margin: 2px;
+    z-index: 1;
+    top: -2px;
+    /*left: -37px;*/
+    color: white;
+    float: right;
+}
+
+.minimize {
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    margin: 2px;
+    top: -2px;
+    color: white;
+    float: right;
+}
+
+
+.download-contents {
+    display: none;
+}
+
+button.authorization__btn {
+    display: none !important;
+}
+
+.opblock-summary-path > a.nostyle {
+    width: 540px
+}
+
+#swagger-ui.api-platform .information-container.wrapper {
+    /*padding: 11px 0 11px;*/
+    padding: 0;
+    text-align: center;
+}
+
+#toggle-auto-auth:after {
+    content: 'Auth disabled';
+}
+
+#toggle-auto-auth.enabled:after {
+    content: 'Auth enabled';
+}
+
+.swagger-ui select {
+    padding: 5px 5px 5px 10px;
+    background: #f7f7f7 url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+PHBhdGggZD0iTTEzLjQxOCA3Ljg1OWEuNjk1LjY5NSAwIDAxLjk3OCAwIC42OC42OCAwIDAxMCAuOTY5bC0zLjkwOCAzLjgzYS42OTcuNjk3IDAgMDEtLjk3OSAwbC0zLjkwOC0zLjgzYS42OC42OCAwIDAxMC0uOTY5LjY5NS42OTUgMCAwMS45NzggMEwxMCAxMWwzLjQxOC0zLjE0MXoiLz48L3N2Zz4=) right 10px center no-repeat;
+}
+
+.ext-header .btn, .ext-header select {
+    border: 0;
+    border-radius: 0;
+    transform: unset;
+    transition: unset;
+    width: 100%;
+    padding: 0;
+    font-size: small;
+}
+
+.ext-header .btn:not(:hover), .ext-header select:not(:hover) {
+    background-color: white !important;
+}
+
+.menu-delimiter {
+    display: inline-grid;
+    vertical-align: middle;
+    height: 55px;
+    border-right: 2px solid #666;
+    margin-right: 1%;
+    margin-left: 1%;
+}
+
+.menu-item {
+    max-width: 15%;
+    display: inline-grid;
+    /*display: inline-block;*/
+    width: auto;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    text-transform: capitalize;
+    /*border-radius: 3px;*/
+    padding-right: 8px;
+    padding-left: 8px;
+    /*padding-top: 4px;*/
+    /*margin: 0 5px;*/
+    font-size: small;
+}
+
+
+.menu-item {
+    height: 61px;
+}
+
+.swagger-ui .menu-item input[type="search"] {
+    border: 0;
+    width: 100%;
+    height: 60%;
+    margin: auto;
+    border-radius: 2px;
+    padding: 0 0 0 5px;
+}
+
+#swagger-ui.api-platform .opblock-tag, #swagger-ui.api-platform .opblock {
+    border-radius: 3px !important;
+}
+
+.swagger-ui section.models {
+    border: 1px solid rgba(107, 110, 119, 0.3);
+}
+
+#swagger-ui.api-platform .opblock-summary-method {
+    border-top-left-radius: 3px !important;
+    border-bottom-left-radius: 3px !important;
+}
+
+#swagger-ui.api-platform .opblock.is-open .opblock-summary-method {
+    border-bottom-left-radius: 0 !important;
+}
+
+.swagger-ui .expand-methods svg, .swagger-ui .expand-operation svg {
+    width: 15px;
+    height: 18px;
+}
+
+.menu-item select {
+    padding-right: 13px;
+}
+
+.menu-item {
+    /*border: 2px solid #6281ee;*/
+    /*transition: background-color 100ms linear;*/
+}
+
+.menu-item:hover, .menu-item:hover a, .menu-item:hover select {
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.menu-item.color-def.logo:hover {
+    background-color: unset !important;
+}
+
+
+.menu-item.color-def {
+    border-color: #be93bb;
+}
+
+.menu-item.color-def select {
+    color: #be93bb;
+}
+
+.menu-item.color-def:hover, .menu-item.color-def:hover > select {
+    background-color: #be93bb !important;
+}
+
+.menu-item.color-def, .menu-item.color-def a, .menu-item.color-def select {
+    color: #be93bb;
+}
+
+
+.menu-item.color-orange {
+    border-color: #C17832;
+}
+
+.menu-item.color-orange select {
+    color: #C17832;
+}
+
+.menu-item.color-orange:hover, .menu-item.color-orange:hover > select {
+    background-color: #C17832 !important;
+}
+
+.menu-item.color-orange, .menu-item.color-orange a, .menu-item.color-orange select {
+    color: #C17832;
+}
+
+
+.menu-item.color-yellow {
+    border-color: #c0aa5b;
+}
+
+.menu-item.color-yellow select {
+    color: #c0aa5b;
+}
+
+.menu-item.color-yellow:hover, .menu-item.color-yellow:hover > select {
+    background-color: #c0aa5b !important;
+}
+
+.menu-item.color-yellow, .menu-item.color-yellow a, .menu-item.color-yellow select {
+    color: #c0aa5b;
+}
+
+
+.menu-item.color-green {
+    border-color: #6BAA60;
+}
+
+.menu-item.color-green select {
+    color: #6BAA60;
+}
+
+.menu-item.color-green:hover, .menu-item.color-green:hover > select {
+    background-color: #6BAA60 !important;
+}
+
+.menu-item.color-green, .menu-item.color-green a, .menu-item.color-green select {
+    color: #6BAA60;
+}
+
+
+.menu-item.color-blue {
+    border-color: #4370AC;
+}
+
+.menu-item.color-blue select {
+    color: #4370AC;
+}
+
+.menu-item.color-blue:hover, .menu-item.color-blue:hover > select {
+    background-color: #4370AC !important;
+}
+
+.menu-item.color-blue, .menu-item.color-blue a, .menu-item.color-blue select {
+    color: #4370AC;
+}
+
+
+.menu-item.color-theme {
+    border-color: white;
+}
+
+.menu-item.color-theme select {
+    color: white;
+}
+
+.menu-item.color-theme:hover, .menu-item.color-theme:hover > select {
+    background-color: white !important;
+}
+
+.menu-item.color-theme, .menu-item.color-theme a, .menu-item.color-theme select {
+    color: white;
+}
+
+
+.menu-item.color-secondary {
+    border-color: #626262;
+}
+
+.menu-item.color-secondary select {
+    color: #626262;
+}
+
+.menu-item.color-secondary:hover, .menu-item.color-secondary:hover > select {
+    background-color: #626262 !important;
+}
+
+.menu-item.color-secondary, .menu-item.color-secondary a, .menu-item.color-secondary select {
+    color: #ffffff;
+}
+
+.body-param-options {
+    display: none !important;
+}
+
+.debug-link {
+    color: #d37734;
+    text-decoration: none;
+    font-weight: bold !important;
+}
+
+.swagger-ui .table-container, .swagger-ui .responses-inner {
+    padding: 0 10px 10px;
+}
+
+.swagger-ui table tbody tr td {
+    padding: 0 0 0;
+}
+
+.swagger-ui .markdown p, .swagger-ui .markdown pre, .swagger-ui .renderedMarkdown p, .swagger-ui .renderedMarkdown pre {
+    margin: 8px auto 1em;
+}
+
+.logo {
+    color: #3caab5;
+    margin-right: 60px;
+    margin-left: 20px;
+    font-size: 21px;
+    top: 10px;
+    position: relative;
+    background-image: url("/assets/nelmio_api_doc/image/logo.svg");
+    background-repeat: no-repeat;
+    width: 5%;
+}
+
+.logo:hover {
+    background-color: unset !important;
+}
+
+.logo small {
+    font-size: 10px;
+    color: #888888;
+    display: inline-block;
+    top: -7px;
+    position: relative
+}
+
+.menu-item a, .menu-item select {
+    text-decoration: none;
+    margin: auto;
+    font-weight: bold !important;
+}
+
+.menu-item-link-icon {
+    height: 10px;
+    display: inline-block;
+}

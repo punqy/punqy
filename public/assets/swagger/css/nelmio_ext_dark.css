@@ -1,0 +1,182 @@
+
+body {
+    background: #333333;
+}
+
+#swagger-ui.api-platform .opblock-tag {
+    background: #444648;
+    color: #c0c0c0;
+    padding-left: 10px;
+}
+
+.arrow, .models h4 svg {
+    fill: #a1a1a2;
+}
+
+a[download]{
+    color: burlywood;
+}
+.menu-item.color-theme {
+    border-color: #2d2d2d;
+}
+
+.menu-item.color-theme select {
+    color: #2d2d2d;
+}
+
+.menu-item.color-theme:hover, .menu-item.color-theme:hover > select {
+    background-color: #2d2d2d !important;
+}
+
+.menu-item.color-theme, .menu-item.color-theme a, .menu-item.color-theme select {
+    color: #2d2d2d;
+}
+
+.menu-item.color-secondary.active{
+    background-color: #6e6e6e;
+}
+.swagger-ui .prop-format {
+    color: #7bca65;
+}
+
+.swagger-ui .model-toggle::after {
+
+    display: block;
+    width: 20px;
+    height: 20px;
+    content: "";
+    fill: darkgrey;
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' fill='deepskyblue' height='24'%3E%3Cpath d='M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'/%3E%3C/svg%3E") 50% no-repeat;
+    background-size: 100%;
+    color: red;
+}
+
+.swagger-ui .parameter__name {
+    font-size: 16px;
+    font-weight: 400;
+    margin-right: .75em;
+    font-family: sans-serif;
+    color: #ccc;
+}
+
+.prop-enum span {
+    color: #5ba85c;
+}
+
+.swagger-ui .parameter__name.required::after {
+    color: #f75b5b;
+    content: '•';
+    text-transform: capitalize;
+    font-size: 15px;
+}
+
+.swagger-ui .parameter__name.required span {
+    display: none;
+}
+
+.swagger-ui .parameter__name.required span, .model tr.false td:first-child span {
+    color: #f75b5b !important;
+}
+
+.model tr.false td:first-child span {
+    visibility: hidden;
+}
+
+.model tr.false td:first-child span:before {
+    visibility: visible;
+    color: #f75b5b !important;
+    content: '•';
+}
+
+.swagger-ui, .opblock-title, .opblock-section-header label, .opblock-summary-description, .opblock-description-wrapper p, .opblock-section-header h4, .col_header, .response-col_status, .response-col_description, .tabitem, .model-title {
+    color: #c0c0c0 !important;
+}
+
+.model, .model-toggle {
+    color: #c0c0c0 !important;
+}
+
+/*.model, .model-toggle {*/
+/*    color: #A89F74 !important;*/
+/*}*/
+
+.brace-open, .brace-close {
+    color: #c0c0c0 !important;
+}
+
+.prop-type, .parameters-col_name .parameter__type {
+    color: #ee821b !important;
+}
+
+.parameter__name.required {
+    color: #c0c0c0;
+}
+
+.parameter__name.required span {
+    color: #ff6060;
+}
+
+.parameter__type {
+}
+
+.body-param__text, .microlight {
+    background: #333333 !important;
+    color: #c0c0c0 !important;
+}
+
+.swagger-ui .opblock-body pre.microlight span {
+    color: #c0c0c0 !important;
+}
+
+.swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5 {
+    color: #c0c0c0;
+}
+
+#swagger-ui.api-platform .btn, .content-type-wrapper select, .parameters-col_description input {
+    background-color: #6e6e6e !important;
+    color: #c0c0c0 !important;
+}
+
+#swagger-ui.api-platform .opblock.opblock-delete .opblock-summary-method {
+    background-color: #88443B;
+}
+
+.swagger-ui .opblock.opblock-patch .opblock-summary-method {
+    background: #43aa93;
+}
+
+.swagger-ui .opblock .opblock-summary-operation-id, .swagger-ui .opblock .opblock-summary-path, .swagger-ui .opblock .opblock-summary-path__deprecated {
+    color: #979797;
+}
+
+#swagger-ui.api-platform .opblock {
+    background-color: #505355;
+}
+
+.ext-header .btn, .ext-header select {
+    border: 0;
+    border-radius: 0;
+    transform: unset;
+    transition: unset;
+    width: 100%;
+    padding: 0;
+    font-size: small;
+}
+
+.information-container.wrapper.ext-header {
+    background: #2d2d2d !important;
+    border-bottom: 0 !important;
+}
+
+.ext-header .btn:not(:hover), .ext-header select:not(:hover) {
+    background-color: #2d2d2d !important;
+}
+
+.swagger-ui .menu-item input[type="search"] {
+    background-color: #6e6e6e;
+    color: #dbdbdb;
+}
+
+.logo {
+    background-image: url("/assets/nelmio_api_doc/image/logo_light.svg");
+}

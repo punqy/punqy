@@ -32,7 +32,7 @@ func (a *userManager) CheckCredentials(ctx context.Context, username, password s
 	if err != nil {
 		return nil, err
 	}
-	if valid, _ := a.encoder.IsPasswordValid(usr.GetPassword(), password); !valid {
+	if err := a.encoder.IsPasswordValid(usr.GetPassword(), password); err != nil {
 		return usr, punqy.InvalidCredentialsErr()
 	}
 	return usr, nil

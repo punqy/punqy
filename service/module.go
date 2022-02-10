@@ -57,7 +57,7 @@ func NewModule(repo repository.ModuleRepository, encoder punqy.PasswordEncoder, 
 	m.refreshTokenStorage = oauth.NewRefreshTokenStorage(config.Config().JWTRefreshTokenSigningKey, config.Config().OauthRefreshTokenTTL)
 	m.userManager = oauth.NewUserManager(repo.UserRepository(), encoder)
 	m.clientStorage = oauth.NewClientStorage(repo.ClientRepository())
-	m.profileManager = user.NewProfileManager(repo.UserRepository())
+	m.profileManager = user.NewProfileManager(repo.UserRepository(), encoder)
 	m.userValuesMiddleware = http.NewUserValuesMiddleware()
 
 	return &m

@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Swagger</title>
+    <link rel="stylesheet" href="/static/assets/swagger/css/swagger-ui.css">
+    <link rel="stylesheet" href="/static/assets/swagger/css/style.css">
+    <link rel="stylesheet" href="/static/assets/swagger/css/jquery-ui.css">
+    <link rel="stylesheet" href="/static/assets/swagger/css/theme.css">
+    <link rel="stylesheet" href="/static/assets/swagger/css/tingle.min.css">
+    <link rel="stylesheet" href="/static/assets/swagger/css/nelmio_ext.css">
+    <link rel="stylesheet" href="/static/assets/swagger/css/nelmio_ext_dark.css">
+</head>
+<body>
+<div id="swagger-data" style="display: none">{{.data}}</div>
+<script id="test-users-data" style="display: none"
+        type="application/json">[{}]</script>
+{{/*<header>*/}}
+{{/*    <a id="logo" href="https://github.com/nelmio/NelmioApiDocBundle"><img src="" alt="NelmioApiDocBundle"></a>*/}}
+{{/*</header>*/}}
+
+
+<div id="swagger-ui" class="api-platform"></div>
+
+<script src="/static/assets/swagger/js/fa-all.min.js"></script>
+<script src="/static/assets/swagger/js/swagger-ui-bundle.js"></script>
+<script src="/static/assets/swagger/js/swagger-ui-standalone-preset.js"></script>
+<script src="/static/assets/swagger/js/jquery.2.2.4.min.js"></script>
+<script src="/static/assets/swagger/js/jquery-modal.0.9.2.js"></script>
+<script src="/static/assets/swagger/js/jquery-ui.1.12.js"></script>
+<script src="/static/assets/swagger/js/tingle.min.js"></script>
+<script src="/static/assets/swagger/js/init-swagger-ui.js"></script>
+
+
+<script>
+    const Storage = {
+        authEnabled: () => localStorage.getItem('nm_autoAuthEnabled') === '1',
+        enableAuth: () => localStorage.setItem('nm_autoAuthEnabled', '1'),
+        disableAuth: () => localStorage.removeItem('nm_autoAuthEnabled'),
+        currentUsername: (name) => localStorage.setItem('nm_currentUsername', name),
+        getCurrentUsername: () => localStorage.getItem('nm_currentUsername'),
+        saveToken: (token) => localStorage.setItem('token', token),
+    };
+    let token = null;
+    let debug = {
+        'Debug': 'dump',
+        'Doctrine': 'db',
+        'Exception': 'exception',
+        'Validator': 'validator',
+        'Form': 'form',
+        'Logger': 'logger',
+        'Performance': 'time',
+        'Request': 'request',
+        'Security': 'security',
+        'Mailer': 'mailer',
+    };
+    window.onload = () => {
+        const data = JSON.parse(document.getElementById('swagger-data').innerText);
+        window.ui = SwaggerUIBundle({
+            spec: data,
+            // url: "/static/docs/swagger.json",
+            dom_id: '#swagger-ui',
+            docExpansion: 'none',
+            validatorUrl: null,
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            plugins: [
+                SwaggerUIBundle.plugins.DownloadUrl
+            ],
+            operationsSorter: (a, b) => {
+                let methodsOrder = ["get", "post", "patch", "put", "delete", "options", "trace"];
+                let result = methodsOrder.indexOf(a.get("method")) - methodsOrder.indexOf(b.get("method"));
+                if (result === 0) {
+                    result = a.get("path").localeCompare(b.get("path"));
+                }
+                return result;
+            },
+            layout: 'StandaloneLayout',
+            defaultModelRendering: 'model',
+            tagsSorter: 'alpha',
+            deepLinking: true,
+            requestInterceptor: (req) => {
+                if (token) {
+                    req.headers.Authorization = `Bearer ${token}`
+                }
+            },
+            responseInterceptor: (res) => {
+                /oauth\/token/.test(res.url) && 200 === res.status && (token = res.obj.access_token), setTimeout(() => {
+                    let debugBlock = $('td.response-col_description:contains("Response headers")');
+                    let token = res.headers["x-debug-token"];
+                    localStorage.setItem('token', token);
+                    let tok = res.headers["x-debug-token-link"];
+                    debugBlock.find('.debug-links').remove();
+                    let container = $('<div class="debug-links"><h5>Debug</h5><pre class="microlight">profiler-window: </pre></div>');
+                    debugBlock.append(container);
+                    Object.keys(debug).forEach((key, index, arr) => {
+                        container.find('.microlight').append(
+                            `<a class="debug-link" data-token="${token}" href="${tok}?panel=${debug[key]}">${key.toUpperCase()}</a>`
+                        ).append(index < arr.length - 1 ? ', ' : ' ');
+                    })
+                }, 200);
+            },
+        });
+
+
+        $('.scheme-container').remove();
+        const Body = $('body');
+        const Document = $(document);
+        const DraggableArea = $('<div id="draggable-area"></div>');
+        const Header = $('.information-container.wrapper').empty().addClass('ext-header');
+        const SwaggerData = JSON.parse($("#swagger-data").html());
+        const Areas = [];
+        const DevClientCredentials = {};
+        const DevUserCredentials = [];
+        const TestUserCredentials = JSON.parse($("#test-users-data").html());
+        const UsersSelect = $('<select></select>');
+        const AuthorizeSelectedBtn = $(document.createElement('a')).text('Authorize');
+        const AutoAuthBtn = $('<a id="toggle-auto-auth"></a>');
+        const DocumentationBtn = $('<a target="_blank" href="https://drive.google.com/drive/folders/1Kxlf6cJa3yWTPvys5pElKKAHlMFPr_Es">Docs <span class="menu-item-link-icon">🡥</span></a>');
+        const BlockSections = $(".opblock-tag-section");
+        const SearchInput = $('<input type=\"search\" placeholder=\"Search tag\">');
+        const Logo = $(`<div></div>`);
+        const UrlSearchParams = new URLSearchParams(window.location.search);
+
+        setTimeout(() => {
+
+            Areas.unshift('default');
+            TestUserCredentials.concat(DevUserCredentials).forEach((e) => {
+                const option = $(`<option value="${e.password}">${e.username}</option>`);
+                option.prop('selected', e.username === Storage.getCurrentUsername());
+                UsersSelect.append(option);
+            });
+
+            AuthorizeSelectedBtn.click(e => {
+                const user = UsersSelect.find('option:selected');
+                const authData = {...DevClientCredentials, username: user.text(), password: user.val()};
+                token = '';
+                $.post("/api/v1/oauth/token", authData).done(a => {
+                    token = a.payload.access_token
+                })
+            });
+
+            SearchInput.keyup(c => {
+                const b = $(c.target).val();
+                BlockSections.each(function (a, c) {
+                    return $(c).find(".nostyle").find("span").text().toLowerCase().match(new RegExp(b.toLowerCase())) ? void $(c).show() : void $(c).hide()
+                });
+                UrlSearchParams.set('search', b);
+                window.history.pushState(window.location.host, '', window.location.pathname + '?' + UrlSearchParams.toString());
+            });
+            SearchInput.val(UrlSearchParams.get('search')).trigger('keyup');
+
+            UsersSelect.change(e => {
+                const user = UsersSelect.find('option:selected');
+                Storage.currentUsername(user.text());
+                AuthorizeSelectedBtn.click();
+            });
+
+            if (Storage.authEnabled()) {
+                AuthorizeSelectedBtn.click();
+                AutoAuthBtn.addClass('enabled');
+            }
+
+            AutoAuthBtn.click(e => {
+                if (Storage.authEnabled()) {
+                    Storage.disableAuth();
+                    AutoAuthBtn.removeClass('enabled');
+                } else {
+                    Storage.enableAuth();
+                    AutoAuthBtn.addClass('enabled');
+                    AuthorizeSelectedBtn.click();
+                }
+            });
+
+
+            const menu = [
+                new Delimiter,
+                new MenuItem({elem: UsersSelect, color: 'green', style: ''}),
+                new MenuItem({elem: AuthorizeSelectedBtn, color: 'orange'}),
+                new MenuItem({elem: AutoAuthBtn, color: 'orange', style: ''}),
+                new MenuItem({elem: DocumentationBtn, color: 'yellow', style: ''}),
+                new MenuItem({elem: SearchInput, color: 'theme', style: 'padding: 0; margin-left: 2%; border:0'}),
+            ];
+
+            Areas.forEach(name => {
+                const path = name === 'default' ? '' : '/' + name;
+                const label = name === 'default' ? 'common' : name;
+                const url = `/api/doc${path}`;
+                const active = window.location.pathname === url.replace(/\/$/, "");
+                const link = `<a ${active ? 'onclick="return false;"' : ''} href="${url}">${label}</a>`;
+                menu.unshift(new MenuItem({
+                    elem: link,
+                    color: active ? 'secondary' : 'blue',
+                    class: `${active ? 'active' : ''}`
+                }));
+            });
+
+            menu.unshift(new MenuItem({elem: Logo, class: 'logo'}));
+            menu.forEach(i => {
+                Header.append(i.print());
+            });
+
+            Document.on('click', '.close-frame', function (event) {
+                $(event.target).closest('.iframe-container').remove();
+            });
+
+            Body.append(DraggableArea);
+
+            Document.on('click', '.debug-link', function (event, a) {
+                event.preventDefault();
+                const target = $(event.target);
+                const className = target.text();
+                const url = target.prop('href');
+
+                const cWindow = new Window(className, url, DraggableArea);
+                const instance = cWindow.open();
+
+                target.prop('target', 'frame' + className);
+                const frame = instance.find('iframe');
+                frame.load(function (e) {
+                    frame.contents().find("#header").remove();
+                    frame.contents().find("body").append($("<style type='text/css'> #sidebar,#sidebar-shortcuts{background-color: #52555F} </style>"));
+                    frame.contents().find("#sidebar-shortcuts").css({"background-color": " #52555F"});
+                });
+            });
+
+        }, 0);
+
+
+        class Delimiter {
+
+            constructor(options) {
+                this.wrapper = $(document.createElement('div'));
+                this.wrapper.addClass('menu-delimiter');
+            }
+
+            print() {
+                return this.wrapper;
+            }
+        }
+
+
+        class MenuItem {
+
+            constructor(options) {
+                this.wrapper = $(document.createElement('div'));
+                this.wrapper.addClass('menu-item');
+                this.wrapper.prop('style', options.style);
+                this.wrapper.addClass('color-' + (options.color || 'def'));
+                this.wrapper.addClass(options.class || '');
+                this.elem = $(options.elem);
+                this.wrapper.append(this.elem);
+            }
+
+            print() {
+                return this.wrapper;
+            }
+        }
+
+
+        class Window {
+
+            /**
+             * @param className
+             * @param src
+             * @param area
+             * @param callback
+             */
+            constructor(className, src, area, callback) {
+                this.className = className;
+                this.src = src;
+                this.area = area;
+                this.callback = callback;
+            }
+
+            /**
+             * @return {jQuery.fn.init|jQuery|HTMLElement}
+             */
+            open() {
+
+                let self = this;
+
+                let cWindow = $(`<div class="window" style="position:fixed"></div>`);
+                let title = $(`<span class="window-title" >${self.className}</span>`);
+                let minimizeButton = $(`<a class="minimize"><i class="fa fa-window-minimize text-light" style="font-size: 12px"></i></a>`);
+                let closeButton = $(`<a class="close-window"><i class="fa fa-times text-light"></i></a>`);
+                let newTabButton = $(`<a href="${self.src}" target="_blank" class="new-tab"><i class="fa fa-window-maximize text-light" style="font-size: 12px"></i></a>`);
+                let frame = $(`<iframe src="${self.src}" frameborder="0" name="frame${self.className}" class="frame"></iframe>`);
+
+                /**
+                 * Add unique name
+                 */
+                $(cWindow, title, minimizeButton, closeButton, newTabButton, frame).addClass(self.className);
+
+                /**
+                 * Add nodes
+                 */
+                cWindow.append([title, newTabButton, minimizeButton, closeButton, frame]);
+
+                /**
+                 * Close window when new tab opening
+                 */
+                $(newTabButton).click(() => {
+                    closeButton.click();
+                });
+
+                /**
+                 * Make window draggable
+                 */
+                cWindow.draggable({
+                    iframeFix: true,
+                    containment: self.area,
+                    start: function () {
+                        $('.window').css('z-index', 1);
+                        cWindow.css('z-index', 2);
+                        let x = window.scrollX;
+                        let y = window.scrollY;
+                        window.onscroll = () => {
+                            window.scrollTo(x, y);
+                        };
+                    },
+                    stop: function () {
+                        window.onscroll = () => {
+                            window.scrollTo(0, 0);
+                        };
+                        window.onscroll = () => {
+                        };
+                    }
+                });
+
+                /**
+                 * Make window minimizable
+                 */
+                minimizeButton.click(() => {
+                    if (cWindow.hasClass('mini')) {
+                        return cWindow.removeClass('mini');
+                    }
+                    cWindow.addClass('mini')
+                });
+
+                /**
+                 * Make window closable
+                 */
+                closeButton.click(() => {
+                    cWindow.remove();
+                });
+
+                /**
+                 * Push window
+                 */
+                Body.append(cWindow);
+
+                /**
+                 * Call callback
+                 */
+                if (typeof this.callback === 'function') {
+                    self.callback(cWindow, frame, title, closeButton, newTabButton, minimizeButton);
+                }
+
+                return cWindow;
+            };
+        }
+    };
+</script>
+</body>
+</html>
