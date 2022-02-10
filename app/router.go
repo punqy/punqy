@@ -11,12 +11,13 @@ func RouterConfig(container *Container) punqy.RouterConfig {
 		Middlewares: punqy.MiddlewareChain{
 			container.ProfilerMiddleware.Handle,
 			container.HttpFirewall.Handle,
+			container.UserValuesMiddleware().Handle,
 		},
 		StaticFiles: &punqy.StaticFiles{
 			Path:    "/static/{filepath:*}",
 			RootDir: "public",
 		},
-		Routing: routing.Root(container.ModuleHttpHandlers),
+		Routing: routing.Routes(container.ModuleHttpHandlers),
 		NotFoundHandler: func(ctx *fasthttp.RequestCtx) {
 			ctx.Response.SetStatusCode(fasthttp.StatusNotFound)
 			ctx.Response.ResetBody()

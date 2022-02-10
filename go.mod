@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
-	github.com/punqy/core v1.0.0
+	github.com/punqy/core v1.0.2
 	github.com/sethvargo/go-envconfig v0.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/slmder/migrate v0.4.0

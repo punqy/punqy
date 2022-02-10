@@ -14,6 +14,7 @@ type Repository interface {
 	FindUserByID(ctx context.Context, id uuid.UUID) (storage.User, error)
 	FindUserByUsername(ctx context.Context, username string) (storage.User, error)
 	Insert(ctx context.Context, entity storage.User) error
+	Update(ctx context.Context, entity storage.User) error
 }
 
 type repository struct {
@@ -36,6 +37,11 @@ func (r *repository) FindUserByUsername(ctx context.Context, username string) (s
 
 func (r *repository) Insert(ctx context.Context, entity storage.User) error {
 	_, err := r.InsertE(ctx, tables.User, entity)
+	return r.PipeErr(err)
+}
+
+func (r *repository) Update(ctx context.Context, entity storage.User) error {
+	_, err := r.UpdateE(ctx, tables.User, entity)
 	return r.PipeErr(err)
 }
 

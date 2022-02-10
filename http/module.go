@@ -2,31 +2,31 @@ package http
 
 import (
 	punqy "github.com/punqy/core"
+	v1 "github.com/punqy/punqy/http/api/v1"
 	"github.com/punqy/punqy/http/dev"
-	"github.com/punqy/punqy/http/oauth"
 )
 
 type ModuleHttpHandlers interface {
-	OAuthTokenHandler() oauth.TokenHandler
 	ProfilerHandler() dev.ProfilerHandler
+	ApiV1() v1.ModuleApiV1
 }
 
 type module struct {
-	oauthTokenHandler oauth.TokenHandler
-	profilerHandler   dev.ProfilerHandler
+	profilerHandler dev.ProfilerHandler
+	apiV1           v1.ModuleApiV1
+}
+
+func (m *module) ApiV1() v1.ModuleApiV1 {
+	return m.apiV1
 }
 
 func (m *module) ProfilerHandler() dev.ProfilerHandler {
 	return m.profilerHandler
 }
 
-func (m *module) OAuthTokenHandler() oauth.TokenHandler {
-	return m.oauthTokenHandler
-}
-
-func NewModule(auth punqy.OAuth, profiler punqy.ProfilerManager, templating punqy.TemplatingEngine) ModuleHttpHandlers {
+func NewModule(profiler punqy.ProfilerManager, templating punqy.TemplatingEngine, apiV1 v1.ModuleApiV1) ModuleHttpHandlers {
 	var m module
-	m.oauthTokenHandler = oauth.NewTokenHandler(auth)
 	m.profilerHandler = dev.NewProfilerHandler(profiler, templating)
+	m.apiV1 = apiV1
 	return &m
 }
