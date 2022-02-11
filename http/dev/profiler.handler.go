@@ -1,12 +1,15 @@
 package dev
 
 import (
-	punqy "github.com/punqy/core"
-	"github.com/punqy/punqy/model/http/common"
-	"github.com/valyala/fasthttp"
+	"encoding/json"
 	"log"
 	nethttp "net/http"
 	"os"
+
+	punqy "github.com/punqy/core"
+	"github.com/punqy/punqy/app/config"
+	"github.com/punqy/punqy/model/http/common"
+	"github.com/valyala/fasthttp"
 )
 
 type ProfilerHandler interface {
@@ -16,12 +19,18 @@ type ProfilerHandler interface {
 type profilerHandler struct {
 	templating punqy.TemplatingEngine
 	manager    punqy.ProfilerManager
+	cfg        config.Config
 }
 
-func NewProfilerHandler(manager punqy.ProfilerManager, templating punqy.TemplatingEngine) ProfilerHandler {
+func NewProfilerHandler(
+	manager punqy.ProfilerManager,
+	templating punqy.TemplatingEngine,
+	cfg config.Config,
+) ProfilerHandler {
 	return &profilerHandler{
 		templating: templating,
 		manager:    manager,
+		cfg:        cfg,
 	}
 }
 
@@ -102,7 +111,16 @@ func (h *profilerHandler) swagger(r punqy.Request) punqy.Response {
 	if err != nil {
 		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
 	}
-	html, err := h.templating.Render("dev/profiler/swagger_ui.gohtml", punqy.Vars{"data": string(dat)})
+	devCredentials, err := json.Marshal(map[string]string{
+		"client_id":     h.cfg.SwaggerOAuthClientID,
+		"client_secret": h.cfg.SwaggerOAuthClientSecret,
+		"grant_type":    "password",
+	})
+	devUsers := h.cfg.SwaggerTestUsersCredentials
+	if err != nil {
+		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
+	}
+	html, err := h.templating.Render("dev/profiler/swagger_ui.gohtml", punqy.Vars{"data": string(dat), "devCredentials": string(devCredentials), "devUsers":string(devUsers)})
 	if err != nil {
 		return punqy.NewErrorHtmlResponse(err, nethttp.StatusInternalServerError)
 	}

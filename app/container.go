@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/app/config"
 	httphandler "github.com/punqy/punqy/http"
@@ -65,7 +66,10 @@ func BuildRegistry(ctx context.Context) (*Container, error) {
 
 	app.ModuleHttpHandlers = httphandler.NewModule(
 		app.ProfilerManager,
-		app.TemplatingEngine, v1.NewModule(app.OAuth, app.ModuleRepository, app.ModuleService))
+		app.TemplatingEngine,
+		v1.NewModule(app.OAuth, app.ModuleRepository, app.ModuleService),
+		app.ModuleConfig,
+	)
 
 	app.OAuthAuthenticator = punqy.NewOAuthAuthenticator(
 		app.ModuleService.AccessTokenStorage(),

@@ -1,12 +1,98 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Punqy rest api.",
+        "title": "Punqy API",
+        "contact": {},
+        "version": "1.0"
     },
+    "basePath": "/api/v1",
     "paths": {
-        "/profile": {
+        "/oauth/token": {
+            "post": {
+                "description": "Retrieve oauth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OAuth"
+                ],
+                "summary": "Retrieve oauth token",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/oauth.GrantAccessTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/core.JsonResponseFormat"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/oauth.GrantAccessTokenResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "422": {
+                        "description": "validation error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/core.JsonResponseFormat"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/common.ValidationError"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/core.JsonResponseFormat"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile": {
             "get": {
-                "description": "Get current (authentiacted) user's profile",
+                "description": "Get current (authenticated) user's profile",
                 "consumes": [
                     "application/json"
                 ],
@@ -57,7 +143,7 @@
                 }
             },
             "patch": {
-                "description": "Patch current (authentiacted) user's profile",
+                "description": "Patch current (authenticated) user's profile",
                 "consumes": [
                     "application/json"
                 ],
@@ -137,9 +223,9 @@
                 }
             }
         },
-        "/profile/change-pass": {
+        "/user/profile/change-pass": {
             "post": {
-                "description": "Change password of current (authentiacted) user",
+                "description": "Change password of current (authenticated) user",
                 "consumes": [
                     "application/json"
                 ],
@@ -181,7 +267,7 @@
                         }
                     },
                     "422": {
-                        "description": "validation",
+                        "description": "validation error",
                         "schema": {
                             "allOf": [
                                 {
@@ -234,6 +320,46 @@
                     "type": "integer"
                 },
                 "payload": {}
+            }
+        },
+        "oauth.GrantAccessTokenRequest": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "type": "string"
+                },
+                "client_secret": {
+                    "type": "string"
+                },
+                "grant_type": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "oauth.GrantAccessTokenResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "access_token_expires_at": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "refresh_token_expires_at": {
+                    "type": "integer"
+                }
             }
         },
         "storage.User": {

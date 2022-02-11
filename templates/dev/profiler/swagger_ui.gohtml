@@ -47,21 +47,11 @@
     let token = null;
     let debug = {
         'Debug': 'dump',
-        'Doctrine': 'db',
-        'Exception': 'exception',
-        'Validator': 'validator',
-        'Form': 'form',
-        'Logger': 'logger',
-        'Performance': 'time',
-        'Request': 'request',
-        'Security': 'security',
-        'Mailer': 'mailer',
     };
     window.onload = () => {
         const data = JSON.parse(document.getElementById('swagger-data').innerText);
         window.ui = SwaggerUIBundle({
             spec: data,
-            // url: "/static/docs/swagger.json",
             dom_id: '#swagger-ui',
             docExpansion: 'none',
             validatorUrl: null,
@@ -92,15 +82,14 @@
             responseInterceptor: (res) => {
                 /oauth\/token/.test(res.url) && 200 === res.status && (token = res.obj.access_token), setTimeout(() => {
                     let debugBlock = $('td.response-col_description:contains("Response headers")');
-                    let token = res.headers["x-debug-token"];
+                    let rpid = res.headers["x-request-profile-id"];
                     localStorage.setItem('token', token);
-                    let tok = res.headers["x-debug-token-link"];
                     debugBlock.find('.debug-links').remove();
                     let container = $('<div class="debug-links"><h5>Debug</h5><pre class="microlight">profiler-window: </pre></div>');
                     debugBlock.append(container);
                     Object.keys(debug).forEach((key, index, arr) => {
                         container.find('.microlight').append(
-                            `<a class="debug-link" data-token="${token}" href="${tok}?panel=${debug[key]}">${key.toUpperCase()}</a>`
+                            `<a class="debug-link" data-token="${token}" href="/dev/profiler/show/${rpid}">${key.toUpperCase()}</a>`
                         ).append(index < arr.length - 1 ? ', ' : ' ');
                     })
                 }, 200);
@@ -115,8 +104,11 @@
         const Header = $('.information-container.wrapper').empty().addClass('ext-header');
         const SwaggerData = JSON.parse($("#swagger-data").html());
         const Areas = [];
-        const DevClientCredentials = {};
-        const DevUserCredentials = [];
+        const DevClientCredentials = JSON.parse("{{.devCredentials}}");
+        const DevUserCredentials = JSON.parse("{{.devUsers}}");
+        const ExtractAuthToken = function (response) {
+            token = response.payload.access_token
+        }
         const TestUserCredentials = JSON.parse($("#test-users-data").html());
         const UsersSelect = $('<select></select>');
         const AuthorizeSelectedBtn = $(document.createElement('a')).text('Authorize');
@@ -140,8 +132,14 @@
                 const user = UsersSelect.find('option:selected');
                 const authData = {...DevClientCredentials, username: user.text(), password: user.val()};
                 token = '';
-                $.post("/api/v1/oauth/token", authData).done(a => {
-                    token = a.payload.access_token
+                $.ajax({
+                    type: "POST",
+                    url: "/api/v1/oauth/token",
+                    dataType: 'json',
+                    async: false,
+                    contentType: 'application/json',
+                    data: JSON.stringify(authData),
+                    success: ExtractAuthToken
                 })
             });
 

@@ -7,10 +7,10 @@ import (
 )
 
 type GrantAccessTokenRequest struct {
-	GrantType    punqy.GrantType `json:"grantType"`
-	ClientSecret string          `json:"clientSecret"`
-	RefreshToken string          `json:"refreshToken"`
-	ClientId     string          `json:"clientId"`
+	GrantType    punqy.GrantType `json:"grant_type"`
+	ClientSecret string          `json:"client_secret"`
+	RefreshToken string          `json:"refresh_token"`
+	ClientId     string          `json:"client_id"`
 	Username     string          `json:"username"`
 	Password     string          `json:"password"`
 }
@@ -46,8 +46,8 @@ func (r GrantAccessTokenRequest) ToPunqyRequest() punqy.GrantAccessTokenRequest 
 }
 
 type GrantAccessTokenResponse struct {
-	AccessToken           string `json:"accessToken"`
-	RefreshToken          string `json:"refreshToken"`
-	AccessTokenExpiresAt  int64  `json:"accessTokenExpiresAt"`
-	RefreshTokenExpiresAt int64  `json:"refreshTokenExpiresAt"`
+	AccessToken           string `json:"access_token"`
+	RefreshToken          string `json:"refresh_token"`
+	AccessTokenExpiresAt  int64  `json:"access_token_expires_at"`
+	RefreshTokenExpiresAt int64  `json:"refresh_token_expires_at"`
 }

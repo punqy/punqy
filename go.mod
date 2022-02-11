@@ -11,7 +11,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/punqy/core v1.0.3
+	github.com/punqy/core v1.0.4
 	github.com/sethvargo/go-envconfig v0.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/slmder/migrate v0.4.0

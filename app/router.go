@@ -23,11 +23,9 @@ func RouterConfig(container *Container) punqy.RouterConfig {
 			ctx.Response.ResetBody()
 		},
 		GlobalHandler: func(ctx *fasthttp.RequestCtx) {
-			if string(ctx.Request.Header.Peek("Access-Control-Request-Method")) != "" {
-				ctx.Request.Header.Set("Access-Control-Allow-Methods", string(ctx.Request.Header.Peek("Allow")))
-				ctx.Request.Header.Set("Access-Control-Allow-Origin", "*")
-			}
-			ctx.Response.SetStatusCode(fasthttp.StatusNoContent)
+			ctx.Request.Header.Set("Access-Control-Allow-Methods", string(ctx.Request.Header.Peek("Allow")))
+			ctx.Request.Header.Set("Access-Control-Allow-Origin", "*")
+			ctx.Response.SetStatusCode(fasthttp.StatusOK)
 		},
 	}
 }

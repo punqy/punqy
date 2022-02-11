@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   common.ValidationError:
     additionalProperties:
@@ -8,6 +9,32 @@ definitions:
       code:
         type: integer
       payload: {}
+    type: object
+  oauth.GrantAccessTokenRequest:
+    properties:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+      grant_type:
+        type: string
+      password:
+        type: string
+      refresh_token:
+        type: string
+      username:
+        type: string
+    type: object
+  oauth.GrantAccessTokenResponse:
+    properties:
+      access_token:
+        type: string
+      access_token_expires_at:
+        type: integer
+      refresh_token:
+        type: string
+      refresh_token_expires_at:
+        type: integer
     type: object
   storage.User:
     properties:
@@ -42,12 +69,60 @@ definitions:
     type: object
 info:
   contact: {}
+  description: Punqy rest api.
+  title: Punqy API
+  version: "1.0"
 paths:
-  /profile:
+  /oauth/token:
+    post:
+      consumes:
+      - application/json
+      description: Retrieve oauth token
+      parameters:
+      - description: Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/oauth.GrantAccessTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  $ref: '#/definitions/oauth.GrantAccessTokenResponse'
+              type: object
+        "422":
+          description: validation error
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  $ref: '#/definitions/common.ValidationError'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/core.JsonResponseFormat'
+            - properties:
+                payload:
+                  type: string
+              type: object
+      summary: Retrieve oauth token
+      tags:
+      - OAuth
+  /user/profile:
     get:
       consumes:
       - application/json
-      description: Get current (authentiacted) user's profile
+      description: Get current (authenticated) user's profile
       produces:
       - application/json
       responses:
@@ -75,7 +150,7 @@ paths:
     patch:
       consumes:
       - application/json
-      description: Patch current (authentiacted) user's profile
+      description: Patch current (authenticated) user's profile
       parameters:
       - description: Body
         in: body
@@ -116,11 +191,11 @@ paths:
       summary: Patch profile
       tags:
       - Profile
-  /profile/change-pass:
+  /user/profile/change-pass:
     post:
       consumes:
       - application/json
-      description: Change password of current (authentiacted) user
+      description: Change password of current (authenticated) user
       parameters:
       - description: Body
         in: body
@@ -141,7 +216,7 @@ paths:
                   type: string
               type: object
         "422":
-          description: validation
+          description: validation error
           schema:
             allOf:
             - $ref: '#/definitions/core.JsonResponseFormat'

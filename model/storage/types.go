@@ -4,9 +4,10 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
 	"reflect"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Entity struct {
@@ -14,6 +15,10 @@ type Entity struct {
 	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
 	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
 	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
+}
+
+func (u *User) SetUpdated() {
+	u.UpdatedAt = time.Now().UTC()
 }
 
 type ColVal struct {

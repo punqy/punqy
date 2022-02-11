@@ -9,8 +9,7 @@ const UserValueUser = "user"
 type UserValuesMiddleware interface {
 	Handle(req punqy.Request, next punqy.Handler) punqy.Response
 }
-type userValuesMiddleware struct {
-}
+type userValuesMiddleware struct {}
 
 func NewUserValuesMiddleware() UserValuesMiddleware {
 	return &userValuesMiddleware{}

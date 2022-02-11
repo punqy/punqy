@@ -1,9 +1,10 @@
 package oauth
 
 import (
+	nethttp "net/http"
+
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/model/http/oauth"
-	nethttp "net/http"
 )
 
 type TokenHandler interface {
@@ -23,10 +24,19 @@ func NewTokenHandler(oauth punqy.OAuth) TokenHandler {
 func (h *tokenHandler) Routes() punqy.RouteList {
 	return punqy.RouteList{
 		punqy.Route{Path: "/token", Method: punqy.Post, Handler: h.getToken},
-		punqy.Route{Path: "/test", Method: punqy.Post, Handler: h.test},
 	}
 }
 
+// @Summary      Retrieve oauth token
+// @Description  Retrieve oauth token
+// @Tags         OAuth
+// @Accept       json
+// @Produce      json
+// @Param        request body oauth.GrantAccessTokenRequest true "Body"
+// @Success      200 {object} punqy.JsonResponseFormat{payload=oauth.GrantAccessTokenResponse}
+// @Success      422 {object} punqy.JsonResponseFormat{payload=common.ValidationError} "validation error"
+// @Failure      500 {object} punqy.JsonResponseFormat{payload=string}
+// @Router       /oauth/token [post]
 func (h *tokenHandler) getToken(req punqy.Request) punqy.Response {
 	var request oauth.GrantAccessTokenRequest
 	if err := req.ParseForm(&request); err != nil {
@@ -40,8 +50,4 @@ func (h *tokenHandler) getToken(req punqy.Request) punqy.Response {
 		return punqy.NewErrorJsonResponse(err)
 	}
 	return punqy.NewJsonResponse(oauth.GrantAccessTokenResponse(response), nethttp.StatusOK, nil)
-}
-
-func (h *tokenHandler) test(req punqy.Request) punqy.Response {
-	return punqy.NewJsonResponse("ok", nethttp.StatusOK, nil)
 }

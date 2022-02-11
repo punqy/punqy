@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/model/storage"
@@ -41,6 +42,7 @@ func (r *repository) Insert(ctx context.Context, entity storage.User) error {
 }
 
 func (r *repository) Update(ctx context.Context, entity storage.User) error {
+	entity.SetUpdated()
 	_, err := r.UpdateE(ctx, tables.User, entity)
 	return r.PipeErr(err)
 }
