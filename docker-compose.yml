@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+    postgres:
+        image: postgres:12-alpine
+        volumes:
+            - "./docker/.data/db:/var/lib/postgresql/data"
+        ports:
+            - "7000:5432"
+        environment:
+            POSTGRES_DB: "app_db"
+            POSTGRES_USER: "username"
+            POSTGRES_PASSWORD: "changeme"
