@@ -23,36 +23,6 @@ func (v Version20211214202332) Up(tx *sqlx.Tx) error {
 		    PRIMARY KEY (id),
 		    UNIQUE (client_secret)
 		);
-		
-		CREATE TABLE "oauth_access_token" (
-		    id         UUID      NOT NULL,
-		    token      VARCHAR(255),
-		    user_id    UUID,
-		    client_id  UUID      NOT NULL,
-		    updated_at TIMESTAMP,
-		    deleted_at TIMESTAMP,
-		    expires_at TIMESTAMP NOT NULL DEFAULT (NOW()),
-		    created_at TIMESTAMP NOT NULL DEFAULT (NOW()),
-		    PRIMARY KEY (id),
-		    UNIQUE (token),
-		    FOREIGN KEY (user_id) REFERENCES "user"(id),
-		    FOREIGN KEY (client_id) REFERENCES "oauth_client" (id)
-		);
-		
-		CREATE TABLE "oauth_refresh_token" (
-		    id         UUID      NOT NULL,
-		    token      VARCHAR(255),
-		    user_id    UUID,
-		    client_id  UUID      NOT NULL,
-		    updated_at TIMESTAMP,
-		    deleted_at TIMESTAMP,
-		    expires_at TIMESTAMP NOT NULL DEFAULT (NOW()),
-		    created_at TIMESTAMP NOT NULL DEFAULT (NOW()),
-		    PRIMARY KEY (id),
-		    UNIQUE (token),
-		    FOREIGN KEY (user_id) REFERENCES "user"(id),
-		    FOREIGN KEY (client_id) REFERENCES "oauth_client" (id)
-		);
 `)
 	return err
 }

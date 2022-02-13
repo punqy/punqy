@@ -42,7 +42,7 @@ func (a *userManager) FindUserByUsername(ctx context.Context, username string) (
 	return a.userRepo.FindUserByUsername(ctx, username)
 }
 
-func (a *userManager) FindUserByID(ctx context.Context, id string) (punqy.UserInterface, error)  {
+func (a *userManager) FindUserByID(ctx context.Context, id string) (punqy.UserInterface, error) {
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return nil, err

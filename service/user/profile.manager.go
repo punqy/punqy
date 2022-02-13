@@ -5,7 +5,7 @@ import (
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/model/http/user"
 	"github.com/punqy/punqy/model/storage"
-	userrepo "github.com/punqy/punqy/repository/user"
+	"github.com/punqy/punqy/repository"
 )
 
 type ProfileManager interface {
@@ -14,23 +14,23 @@ type ProfileManager interface {
 }
 
 type profileManager struct {
-	userRepo userrepo.Repository
-	encoder  punqy.PasswordEncoder
+	repository repository.ModuleRepository
+	encoder    punqy.PasswordEncoder
 }
 
 func NewProfileManager(
-	userRepo userrepo.Repository,
+	repository repository.ModuleRepository,
 	encoder punqy.PasswordEncoder,
 ) ProfileManager {
 	return &profileManager{
-		userRepo: userRepo,
-		encoder:  encoder,
+		repository: repository,
+		encoder:    encoder,
 	}
 }
 
 func (p *profileManager) PatchProfile(ctx context.Context, req user.PatchProfileRequest, usr storage.User) error {
 	usr.Username = req.Username
-	return p.userRepo.Update(ctx, usr)
+	return p.repository.Users().Update(ctx, usr)
 }
 
 func (p *profileManager) ChangePassword(ctx context.Context, req user.ChangePasswordRequest, usr storage.User) error {
@@ -42,5 +42,5 @@ func (p *profileManager) ChangePassword(ctx context.Context, req user.ChangePass
 		return err
 	}
 	usr.Password = passwordHash
-	return p.userRepo.Update(ctx, usr)
+	return p.repository.Users().Update(ctx, usr)
 }

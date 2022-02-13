@@ -63,7 +63,7 @@ func (r *clientRepository) FindBy(ctx context.Context, cond qbuilder.Conditions,
 }
 
 func (r *clientRepository) FindOneBy(ctx context.Context, cond qbuilder.Conditions) (model.OAuthClient, error) {
-	entity := model.OAuthClient{}
+	var entity model.OAuthClient
 	return entity, r.Dal.FindOneBy(ctx, tables.OAuthClient, &entity, cond)
 }
 

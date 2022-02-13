@@ -50,7 +50,7 @@ func Commands() punqy.Commands {
 					logger.Error(err)
 					return
 				}
-				if err := registry.UserRepository().Insert(ctx, u); err != nil {
+				if err := registry.Users().Insert(ctx, u); err != nil {
 					logger.Error(err)
 					return
 				}
@@ -68,7 +68,7 @@ func Commands() punqy.Commands {
 					logger.Error(err)
 					return
 				}
-				client, err := registry.ClientRepository().NewOauthClient(ctx)
+				client, err := registry.OauthClients().NewOauthClient(ctx)
 				if err != nil {
 					logger.Error(err)
 					return

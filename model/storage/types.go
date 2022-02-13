@@ -4,17 +4,16 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type Entity struct {
-	ID        uuid.UUID  `json:"id" db:"id"`
-	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
-	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
-	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
+	ID        uuid.UUID `json:"id" db:"id"`
+	UpdatedAt time.Time `json:"updatedAt" db:"updated_at"`
+	CreatedAt time.Time `json:"createdAt" db:"created_at"`
+	DeletedAt time.Time `json:"deletedAt" db:"deleted_at"`
 }
 
 func (u *User) SetUpdated() {
@@ -41,38 +40,10 @@ func NewEntity() (Entity, error) {
 
 func (e *Entity) Init() error {
 	e.CreatedAt = time.Now()
-	e.UpdatedAt = time.Now()
+	e.UpdatedAt = e.CreatedAt
 	id, err := uuid.NewRandom()
 	e.ID = id
 	return err
-}
-
-func (e *Entity) NewId() error {
-	uid, err := uuid.NewRandom()
-	if err != nil {
-		return err
-	}
-	e.ID = uid
-	return nil
-}
-
-func (e Entity) GetColVal() ([]ColVal, error) {
-	var rows []ColVal
-	t := reflect.TypeOf(e)
-	v := reflect.ValueOf(e)
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		col := field.Tag.Get("db")
-		if col == "" {
-			col = field.Name
-		}
-		val, err := driver.DefaultParameterConverter.ConvertValue(v.Field(i).Interface())
-		if err != nil {
-			return rows, err
-		}
-		rows = append(rows, ColVal{Column: col, Value: val})
-	}
-	return rows, nil
 }
 
 type StringList []string

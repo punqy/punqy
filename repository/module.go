@@ -7,8 +7,8 @@ import (
 )
 
 type ModuleRepository interface {
-	ClientRepository() oauth.ClientRepository
-	UserRepository() user.Repository
+	OauthClients() oauth.ClientRepository
+	Users() user.Repository
 }
 
 type module struct {
@@ -16,11 +16,11 @@ type module struct {
 	userRepository   user.Repository
 }
 
-func (m *module) UserRepository() user.Repository {
+func (m *module) Users() user.Repository {
 	return m.userRepository
 }
 
-func (m *module) ClientRepository() oauth.ClientRepository {
+func (m *module) OauthClients() oauth.ClientRepository {
 	return m.clientRepository
 }
 
