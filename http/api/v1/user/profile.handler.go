@@ -87,7 +87,7 @@ func (h *profileHandler) changePass(req punqy.Request) punqy.Response {
 		return punqy.NewErrorJsonResponse(err)
 	}
 	if err := request.Validate(); err != nil {
-		return punqy.NewValidationErrJsonResponse(err)
+		return punqy.NewErrorJsonResponse(err)
 	}
 	if err := h.profileManager.ChangePassword(req, request, req.UserValue(http.UserValueUser).(storage.User)); err != nil {
 		return punqy.NewErrorJsonResponse(err)

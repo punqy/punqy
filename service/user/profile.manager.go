@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	punqy "github.com/punqy/core"
 	"github.com/punqy/punqy/model/http/user"
 	"github.com/punqy/punqy/model/storage"
@@ -35,7 +36,7 @@ func (p *profileManager) PatchProfile(ctx context.Context, req user.PatchProfile
 
 func (p *profileManager) ChangePassword(ctx context.Context, req user.ChangePasswordRequest, usr storage.User) error {
 	if err := p.encoder.IsPasswordValid(usr.Password, req.OldPassword); err != nil {
-		return punqy.BadRequestErr("old password doesn't match")
+		return punqy.ValidationError(&req, &req.OldPassword, "old password doesn't match")
 	}
 	passwordHash, err := p.encoder.EncodePassword(req.NewPassword, nil)
 	if err != nil {

@@ -4,7 +4,6 @@ go 1.16
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
@@ -12,7 +11,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/punqy/core v1.0.4
+	github.com/punqy/core v1.0.5
 	github.com/sethvargo/go-envconfig v0.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/slmder/migrate v0.4.0

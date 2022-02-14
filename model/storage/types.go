@@ -13,7 +13,7 @@ type Entity struct {
 	ID        uuid.UUID `json:"id" db:"id"`
 	UpdatedAt time.Time `json:"updatedAt" db:"updated_at"`
 	CreatedAt time.Time `json:"createdAt" db:"created_at"`
-	DeletedAt time.Time `json:"deletedAt" db:"deleted_at"`
+	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
 }
 
 func (u *User) SetUpdated() {

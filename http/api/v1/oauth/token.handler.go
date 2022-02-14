@@ -43,7 +43,7 @@ func (h *tokenHandler) getToken(req punqy.Request) punqy.Response {
 		return punqy.NewErrorJsonResponse(err)
 	}
 	if err := request.Validate(); err != nil {
-		return punqy.NewValidationErrJsonResponse(err)
+		return punqy.NewErrorJsonResponse(err)
 	}
 	response, err := h.oauth.GrantAccessToken(req, request.ToPunqyRequest())
 	if err != nil {
